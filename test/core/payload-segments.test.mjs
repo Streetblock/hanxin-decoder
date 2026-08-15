@@ -411,6 +411,66 @@ test("dispatches mixed payloads, propagates ECI, and consumes zero padding", () 
   assert.equal(payload.uri, true);
 });
 
+test("decodes the normative ECI 000009 binary byte sequence", () => {
+  const bytes = [0xA1, 0xA2, 0xA3, 0xA4, 0xA5];
+  const stream = [
+    "1000", "0" + bits(9, 7),
+    "0011", bits(bytes.length, 13), ...bytes.map((value) => bits(value, 8)),
+  ].join("");
+  const payload = readPayload(BitReader.fromBitString(stream));
+  assert.deepEqual(payload.bytes, Uint8Array.from(bytes));
+  assert.equal(payload.segments[0].eciCharacterSet, "ISO-8859-7");
+  assert.equal(payload.segments[1].eciAssignment, 9);
+  assert.equal(payload.segments[1].eciSupported, true);
+  assert.equal(payload.segments[1].eciValid, true);
+});
+
+test("keeps a multibyte ECI decoder alive across mode boundaries and switches", () => {
+  const stream = [
+    "1000", "0" + bits(26, 7),
+    "0011", bits(1, 13), bits(0xE2, 8),
+    "0011", bits(2, 13), bits(0x82, 8), bits(0xAC, 8),
+    "1000", "0" + bits(3, 7),
+    "0010", bits(10, 6), bits(63, 6),
+  ].join("");
+  const payload = readPayload(BitReader.fromBitString(stream));
+  assert.equal(payload.text, "€A");
+  assert.equal(payload.segments[1].text, "");
+  assert.equal(payload.segments[2].text, "€");
+  assert.equal(payload.segments[2].eciAssignment, 26);
+  assert.equal(payload.segments[4].eciAssignment, 3);
+});
+
+test("preserves unknown ECI bytes and segment boundaries without invented text", () => {
+  const stream = [
+    "1000", "10" + bits(899, 14),
+    "0011", bits(1, 13), bits(0x41, 8),
+    "0010", bits(11, 6), bits(63, 6),
+  ].join("");
+  const payload = readPayload(BitReader.fromBitString(stream));
+  assert.deepEqual(payload.bytes, Uint8Array.of(0x41, 0x42));
+  assert.equal(payload.text, undefined);
+  assert.equal(payload.segments.length, 3);
+  assert.equal(payload.segments[1].eciAssignment, 899);
+  assert.equal(payload.segments[1].eciSupported, false);
+  assert.equal(payload.segments[1].text, undefined);
+  assert.equal(payload.segments[2].text, undefined);
+});
+
+test("invalid ECI bytes make the complete ECI run textless but remain lossless", () => {
+  const stream = [
+    "1000", "0" + bits(26, 7),
+    "0011", bits(1, 13), bits(0xC3, 8),
+    "0010", bits(10, 6), bits(63, 6),
+  ].join("");
+  const payload = readPayload(BitReader.fromBitString(stream));
+  assert.deepEqual(payload.bytes, Uint8Array.of(0xC3, 0x41));
+  assert.equal(payload.text, undefined);
+  assert.equal(payload.segments[1].eciValid, false);
+  assert.equal(payload.segments[2].eciValid, false);
+  assert.equal(payload.segments[2].eciSupported, true);
+});
+
 test("payload dispatcher preserves binary bytes without inventing text", () => {
   const stream = `0011${bits(2, 13)}${bits(0x00, 8)}${bits(0xFF, 8)}`;
   const payload = readPayload(BitReader.fromBitString(stream));

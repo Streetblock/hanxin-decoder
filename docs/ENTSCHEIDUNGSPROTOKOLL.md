@@ -28,3 +28,27 @@ Proprietäre Vergleichsencoder bleiben optionale Interoperabilitätsorakel,
 erzeugt. Kapazitätsprüfungen lassen danach ausschließlich 1, 3, 5 oder 7
 Restbits außerhalb der vollständigen Codewörter übrig. Alle vier Masken
 verändern auch bei Version 84 kein reserviertes Modul.
+
+## DEC-002: ECI-Zeichensatzinterpretation und Rohdatenerhalt
+
+**Status:** entschieden
+
+**Kontext:** GB/T 21049-2022 definiert den ECI-Modusindikator, die drei
+Längenformen der Zuweisungsnummer und ihre Gültigkeit bis zum nächsten
+ECI-Wechsel. Die Bedeutung der Zuweisungsnummern wird durch das in der Norm
+referenzierte ECI-Register festgelegt. Mehrbytezeichen können dabei über
+mehrere nachfolgende Han-Xin-Datensegmente verteilt sein.
+
+**Entscheidung:** ECI-Zuweisung und Han-Xin-Segmentstruktur bleiben getrennte
+Schichten. Die Bibliothek führt für bekannte Zeichensatzzuweisungen einen
+strikten, zustandsbehafteten Decoder vom ECI-Indikator bis zum nächsten
+ECI-Indikator oder Datenende. Unbekannte Zuweisungen, im jeweiligen
+JavaScript-Laufzeitsystem nicht verfügbare Zeichensätze und ungültige
+Bytefolgen bewahren die Rohbytes und Segmentgrenzen unverändert; für den
+betroffenen ECI-Lauf wird kein Unicode-Text erzeugt.
+
+**Testfolge:** Das ECI-Beispiel der Norm mit Zuweisung 9 und den Bytes
+`A1 A2 A3 A4 A5` wird bytegenau gelesen. Ein UTF-8-Zeichen wird über zwei
+Binärsegmente hinweg dekodiert, ein anschließender ECI-Wechsel wird
+positionsgenau wirksam. Unbekannte und ungültige Zuweisungen bleiben
+verlustfrei und textlos. Derselbe Mehrsegmentfall läuft in Node und Chromium.

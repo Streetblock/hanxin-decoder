@@ -25,6 +25,11 @@ export {
 } from "./gf256.js";
 export { ReedSolomonCodec } from "./reed-solomon.js";
 export {
+  characterSetForEci,
+  createEciTextDecoder,
+  decodeEciBytes,
+} from "./eci.js";
+export {
   expandRsBlocks,
   HAN_XIN_RS_BLOCK_TABLE,
   rsBlockStructureFor,

@@ -4,6 +4,7 @@ import "./core/bit-matrix.test.mjs";
 import "./core/bit-stream.test.mjs";
 import "./core/corner-function-pattern.test.mjs";
 import "./core/data-placement.test.mjs";
+import "./core/eci.test.mjs";
 import "./core/gf256.test.mjs";
 import "./core/function-information.test.mjs";
 import "./core/function-pattern.test.mjs";

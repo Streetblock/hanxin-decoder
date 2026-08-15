@@ -1,4 +1,5 @@
 import { BitReader } from "./bit-stream.js";
+import { characterSetForEci, createEciTextDecoder } from "./eci.js";
 import { InvalidBitStreamError } from "./errors.js";
 import { HanXinMode, readModeIndicator } from "./modes.js";
 
@@ -140,6 +141,82 @@ function readerHasOnlyZeroes(reader) {
   } finally {
     reader.position = position;
   }
+}
+
+function applyEciInterpretation(segments) {
+  let activeAssignment;
+  let activeCharacterSet;
+  let decoder;
+  let activeSupported = false;
+  let runIndexes = [];
+  let runValid = true;
+
+  function invalidateRun() {
+    runValid = false;
+    decoder = undefined;
+    for (const index of runIndexes) {
+      segments[index] = { ...segments[index], text: undefined, eciValid: false };
+    }
+  }
+
+  function finishRun() {
+    if (decoder && runValid && runIndexes.length > 0) {
+      try {
+        const finalText = decoder.decode();
+        const lastIndex = runIndexes.at(-1);
+        segments[lastIndex] = {
+          ...segments[lastIndex],
+          text: `${segments[lastIndex].text}${finalText}`,
+        };
+      } catch {
+        invalidateRun();
+      }
+    }
+    runIndexes = [];
+  }
+
+  for (let index = 0; index < segments.length; index += 1) {
+    const segment = segments[index];
+    if (segment.mode === HanXinMode.ECI) {
+      finishRun();
+      activeAssignment = segment.assignmentNumber;
+      activeCharacterSet = characterSetForEci(activeAssignment);
+      decoder = createEciTextDecoder(activeAssignment);
+      activeSupported = decoder !== undefined;
+      runValid = decoder !== undefined;
+      segments[index] = {
+        ...segment,
+        eciCharacterSet: activeCharacterSet?.name,
+        eciSupported: activeSupported,
+      };
+      continue;
+    }
+    if (activeAssignment === undefined) continue;
+
+    runIndexes.push(index);
+    const metadata = {
+      eciAssignment: activeAssignment,
+      eciCharacterSet: activeCharacterSet?.name,
+      eciSupported: activeSupported,
+      eciValid: activeSupported ? runValid : undefined,
+    };
+    if (!decoder || !runValid) {
+      segments[index] = { ...segment, ...metadata, text: undefined };
+      continue;
+    }
+    try {
+      segments[index] = {
+        ...segment,
+        ...metadata,
+        text: decoder.decode(segment.bytes, { stream: true }),
+      };
+    } catch {
+      segments[index] = { ...segment, ...metadata, text: undefined, eciValid: false };
+      invalidateRun();
+    }
+  }
+  finishRun();
+  return segments;
 }
 
 function commonChineseRegionOneBytes(value) {
@@ -699,7 +776,6 @@ const SEGMENT_READERS = Object.freeze({
 export function readPayload(input) {
   const reader = input instanceof BitReader ? input : new BitReader(input);
   const segments = [];
-  let activeEci;
 
   while (reader.available > 0) {
     if (readerHasOnlyZeroes(reader)) {
@@ -708,13 +784,10 @@ export function readPayload(input) {
     }
     const definition = readModeIndicator(reader);
     const segment = SEGMENT_READERS[definition.mode](reader);
-    if (segment.mode === HanXinMode.ECI) {
-      activeEci = segment.assignmentNumber;
-      segments.push(segment);
-    } else {
-      segments.push(activeEci === undefined ? segment : { ...segment, eciAssignment: activeEci });
-    }
+    segments.push(segment);
   }
+
+  applyEciInterpretation(segments);
 
   const dataSegments = segments.filter((segment) => segment.mode !== HanXinMode.ECI);
   if (dataSegments.length === 0) {

@@ -15,8 +15,9 @@ Stand: 2026-08-15
   variable Zähler, Terminatoren, GS1-FNC1, URI-A/B/C und Prozentkodierung sowie
   kontrollierte Fehler bei ungültigen oder abgeschnittenen Segmenten.
 - Übergreifender Payload-Dispatcher für beliebige normgültige Modusfolgen,
-  ECI-Zustandsweitergabe, verlustfreie Rohbytes und Nullauffüllung am Ende des
-  Informationsbitstroms.
+  ECI-Zustandsweitergabe und -Zeichensatzinterpretation über Segmentgrenzen,
+  verlustfreie Rohbytes bei unbekannten, nicht verfügbaren oder ungültigen
+  ECI-Daten sowie Nullauffüllung am Ende des Informationsbitstroms.
 - Vollständige Matrix-zu-Payload-Kette aus redundanter Funktionsinformation,
   Dimensions-/Versionsabgleich, Demaskierung, Codewortauslesung,
   Picket-Fence-Rückordnung, blockweiser RS-Korrektur und Payload-Dispatch.
@@ -84,7 +85,7 @@ Stand: 2026-08-15
   Platzierung und Auslesen sind für jede Version bytegenau invers.
 - Strikt getrennte, temporäre Drittanbieter-Vergleichsfixtures für
   Interoperabilitätsprüfungen; die Norm bleibt Implementierungsquelle.
-- 102 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
+- 110 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
   erfolgreich.
 
 ## Als Nächstes
