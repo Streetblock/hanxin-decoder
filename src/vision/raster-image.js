@@ -51,14 +51,28 @@ function compositeOverWhite(channel, alpha) {
 }
 
 /** Converts Gray8, RGB8, or RGBA8 input to an owned canonical Gray8 raster. */
-export function toGrayscaleRaster(image) {
+export function toGrayscaleRaster(image, options = {}) {
+  if (options === null || typeof options !== "object" || Array.isArray(options)) {
+    throw new TypeError("options must be an object");
+  }
+  if (options.checkpoint !== undefined && typeof options.checkpoint !== "function") {
+    throw new TypeError("options.checkpoint must be a function");
+  }
+
   const details = validateRasterImage(image);
   const grayscale = new Uint8Array(details.pixelCount);
+  const checkpoint = options.checkpoint ?? (() => {});
+  const chunkSize = 16_384;
 
   if (details.channels === 1) {
-    grayscale.set(image.data);
+    for (let start = 0; start < details.pixelCount; start += chunkSize) {
+      checkpoint();
+      const end = Math.min(start + chunkSize, details.pixelCount);
+      grayscale.set(image.data.subarray(start, end), start);
+    }
   } else if (details.channels === 3) {
     for (let pixel = 0, offset = 0; pixel < details.pixelCount; pixel += 1, offset += 3) {
+      if (pixel % chunkSize === 0) checkpoint();
       grayscale[pixel] = luminance(
         image.data[offset],
         image.data[offset + 1],
@@ -67,6 +81,7 @@ export function toGrayscaleRaster(image) {
     }
   } else {
     for (let pixel = 0, offset = 0; pixel < details.pixelCount; pixel += 1, offset += 4) {
+      if (pixel % chunkSize === 0) checkpoint();
       const alpha = image.data[offset + 3];
       grayscale[pixel] = luminance(
         compositeOverWhite(image.data[offset], alpha),
@@ -75,6 +90,7 @@ export function toGrayscaleRaster(image) {
       );
     }
   }
+  checkpoint();
 
   return Object.freeze({
     width: details.width,

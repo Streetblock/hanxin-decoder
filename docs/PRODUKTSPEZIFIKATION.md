@@ -21,7 +21,7 @@ sind. Heuristische Rohtexte gelten niemals als erfolgreicher Decode.
 1. GB/T 21049-2022 ist die normative Quelle für Symbolaufbau, Datenkodierung,
    Maskierung, Codewortanordnung, Fehlerkorrektur und Dekodierung.
 2. Die Beispiele in Anhang F dienen als bitgenaue Golden Vectors.
-3. `Referenzen/maxidecode-js` dient ausschließlich als Referenz für robuste
+3. `../Referenzen/maxidecode-js` dient ausschließlich als Referenz für robuste
    Suchstrategien, Wiederholungslogik und Laufzeitintegration. Seine
    MaxiCode-Geometrie und sein Payload-Code werden nicht übernommen.
 4. Proprietäre Drittanbieter dürfen in lokalen Entwicklungs- und Testwerkzeugen

@@ -4,7 +4,7 @@ Stand: 2026-08-15
 
 ## In Arbeit
 
-M2.1 - Browser-Abgleich des vollständigen Golden-Renderer-Korpus
+M2.3 - Orientierung, Dimension und Modulabtastung
 
 ## Fertig und getestet
 
@@ -26,15 +26,25 @@ M2.1 - Browser-Abgleich des vollständigen Golden-Renderer-Korpus
   und 8 Pixeln pro Modul sowie 0/90/180/270 Grad.
 - Baseline-Renderer-Korpus für alle 1.344 Kombinationen aus Version, Level und
   Maske bei 2 Pixeln pro Modul.
+- Deterministische globale Schwelle aus minimaler und maximaler Luminanz mit
+  konfigurierbarer Kontrastuntergrenze und optionaler fester Schwelle.
+- Geordnete Kandidatenbildung: normale Polarität zuerst, invertierte Polarität
+  als begrenzter zweiter Versuch; der zweite Versuch kann abgeschaltet werden.
+- Exakter Vordergrundrahmen in Eingabekoordinaten trotz Ruhezone,
+  zusätzlichem Bildrand und beliebiger ganzzahliger Übersetzung.
+- Harte Standardgrenze von 16.777.216 Pixeln und höchstens zwei
+  Polaritätskandidaten.
+- Kontrollpunkte während Graustufenumwandlung, Kontrastscan und Binarisierung
+  liefern stabil `ABORTED` beziehungsweise `TIMEOUT`.
 - Öffentliche Exporte über das Hauptpaket und den Unterpfad `./vision`.
-- Vollständiger Korpus: 128/128 unter Node, null Fehler. Der Renderer selbst
-  lief vor Ergänzung des 1.344er Baseline-Tests mit 127/127 auch unter
-  Chromium 151; der abschließende Browserlauf des erweiterten Korpus steht aus.
+- Vollständiger gemeinsamer Korpus: 136/136 unter Node und 136/136 unter
+  Chromium 151, null Fehler. Der Browserlauf dauerte 39,33 s.
 
 ## Als Nächstes
 
-1. Deterministische globale Binarisierung für ideale Raster implementieren.
-2. Symbolrahmen trotz zusätzlichem Rand und Zielbildübersetzung erkennen.
+1. Aus dem Kandidatenrahmen ausschließlich Versionen 1-84 und ganzzahlige
+   Modulgrößen ableiten.
+2. Module rechtwinklig orientieren, abtasten und an `decodeMatrix` übergeben.
 
 M2 ist erst abgeschlossen, wenn alle Kriterien `AC-M1-*` und `AC-M2-*`
 erfüllt und im M2-Akzeptanzbericht nachgewiesen sind.
