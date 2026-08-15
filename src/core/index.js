@@ -48,6 +48,11 @@ export {
   readModeIndicator,
 } from "./modes.js";
 export {
+  readBinarySegment,
+  readNumericSegment,
+  readTextSegment,
+} from "./payload-segments.js";
+export {
   MAX_HAN_XIN_VERSION,
   MIN_HAN_XIN_VERSION,
   dimensionForVersion,

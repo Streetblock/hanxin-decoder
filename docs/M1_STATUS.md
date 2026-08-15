@@ -9,6 +9,10 @@ Stand: 2026-08-15
 - `BitReader` und `BitWriter` für nicht byteausgerichtete Datenströme.
 - Han-Xin-Versions-/Dimensionsabbildung für Version 1 bis 84.
 - Strikter Präfixparser für die elf Modusindikatoren aus Tabelle 1.
+- Normative Segmentleser für Numerisch, Text und Binär. Abgedeckt sind beide
+  numerischen Normbeispiele, alle Werte der Text1-/Text2-Tabellen,
+  Submoduswechsel, der 13-Bit-Binärzähler, nicht byteausgerichtete Modusfolgen
+  und kontrollierte Fehler bei ungültigen oder abgeschnittenen Segmenten.
 - Vier Masken aus Tabelle 14 mit Ausschluss von Funktionsmodulen. Die
   öffentliche Matrix-API ist nullbasiert; vor Auswertung der Normformeln
   werden Zeile und Spalte in die positiven Normkoordinaten `i` und `j`
@@ -48,13 +52,13 @@ Stand: 2026-08-15
   Platzierung und Auslesen sind für jede Version bytegenau invers.
 - Strikt getrennte, temporäre Drittanbieter-Vergleichsfixtures für
   Interoperabilitätsprüfungen; die Norm bleibt Implementierungsquelle.
-- 63 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
+- 72 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
   erfolgreich.
 
 ## Als Nächstes
 
-1. Nutzdatenparser zunächst für Numerisch, Text und Binär, danach die
-   chinesischen, GB18030-, ECI-, Unicode-, GS1- und URI-Modi.
+1. Nutzdatenparser um die chinesischen, GB18030-, ECI-, Unicode-, GS1- und
+   URI-Modi sowie den übergreifenden Segmentdispatch erweitern.
 
 M1 ist erst abgeschlossen, wenn sämtliche Kriterien `AC-M1-*` aus
 `AKZEPTANZKRITERIEN.md` erfüllt sind.
