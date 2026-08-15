@@ -151,15 +151,16 @@ summary:focus-visible {
 .workspace {
   width: min(1180px, calc(100% - 48px));
   margin: 0 auto;
-  padding: 58px 0 64px;
+  padding: 34px 0 56px;
 }
 
 .intro {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.65fr);
-  gap: 48px;
-  align-items: end;
-  margin-bottom: 42px;
+  grid-template-columns: minmax(0, 1.65fr) minmax(280px, 0.75fr);
+  gap: clamp(32px, 6vw, 88px);
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 10px 0 2px;
 }
 
 .kicker,
@@ -180,20 +181,20 @@ p {
 }
 
 h1 {
-  max-width: 720px;
+  max-width: 760px;
   margin: 0;
-  font-size: clamp(3rem, 6.7vw, 6rem);
-  font-weight: 760;
-  letter-spacing: -0.075em;
-  line-height: 0.92;
+  font-size: clamp(2.5rem, 4.5vw, 4.15rem);
+  font-weight: 740;
+  letter-spacing: -0.065em;
+  line-height: 0.96;
 }
 
 .intro-copy {
   max-width: 420px;
-  margin: 0 0 4px;
+  margin: 24px 0 0;
   color: var(--ink-soft);
-  font-size: clamp(1rem, 1.5vw, 1.2rem);
-  line-height: 1.55;
+  font-size: clamp(0.94rem, 1.25vw, 1.08rem);
+  line-height: 1.5;
 }
 
 .scanner-layout {
@@ -719,7 +720,12 @@ body.is-camera-active .camera-dot {
 @media (max-width: 900px) {
   .intro {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 14px;
+  }
+
+  .intro-copy {
+    max-width: 620px;
+    margin-top: 0;
   }
 
   .scanner-layout {
@@ -749,11 +755,11 @@ body.is-camera-active .camera-dot {
   }
 
   .workspace {
-    padding: 38px 0 42px;
+    padding: 28px 0 42px;
   }
 
   h1 {
-    font-size: clamp(2.8rem, 16vw, 4.4rem);
+    font-size: clamp(2.35rem, 12vw, 3.6rem);
   }
 
   .capture-card,
