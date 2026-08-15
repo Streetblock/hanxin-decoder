@@ -11,6 +11,7 @@ import "./core/masks.test.mjs";
 import "./core/matrix-decoder.test.mjs";
 import "./core/modes.test.mjs";
 import "./core/payload-segments.test.mjs";
+import "./core/reed-solomon-coverage.test.mjs";
 import "./core/reed-solomon.test.mjs";
 import "./core/rs-block-table.test.mjs";
 import "./core/rs-blocks.test.mjs";

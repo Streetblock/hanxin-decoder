@@ -45,6 +45,11 @@ Stand: 2026-08-15
   RS-Prüfwörter, Picket-Fence-Datenstrom, Funktionsinformation und finale
   Matrix exakt reproduziert.
 - Korrektur von einem und zwei unbekannten Codewortfehlern im Normvektor.
+- Vollständiger RS-Kapazitätsnachweis für alle 241 unterschiedlichen
+  Blocktypen aus Tabelle B.1: für jede Fehlerzahl von 1 bis `t` werden Rand-,
+  Mittel- und deterministisch zufällige Positionen exakt korrigiert. Für
+  `t+1` Fehler wird je Blocktyp zusätzlich ausgeschlossen, dass ein anderes
+  Codewort als gültig akzeptiert wird.
 - Funktionsinformation nach Anhang G mit `GF(2^4)`, RS `(7, 3, 4)`,
   Normbeispiel, allen 1.344 Version-/Level-/Maskenkombinationen und Korrektur
   von bis zu zwei beschädigten GF(16)-Symbolen.
@@ -74,7 +79,7 @@ Stand: 2026-08-15
   Platzierung und Auslesen sind für jede Version bytegenau invers.
 - Strikt getrennte, temporäre Drittanbieter-Vergleichsfixtures für
   Interoperabilitätsprüfungen; die Norm bleibt Implementierungsquelle.
-- 100 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
+- 102 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
   erfolgreich.
 
 ## Als Nächstes
@@ -83,8 +88,6 @@ Stand: 2026-08-15
    zusätzlich zu ihren bereits bestandenen Endmatrizen erfassen.
 2. Den M1-Kern unverändert in einem Browser-Testlauf ausführen und die
    Referenzmaschine für den verbindlichen Laufzeitnachweis festschreiben.
-3. Die RS-Fehlerpositions- und Kapazitätstests über jeden Blocktyp bis `t`
-   ausweiten.
 
 M1 ist erst abgeschlossen, wenn sämtliche Kriterien `AC-M1-*` aus
 `AKZEPTANZKRITERIEN.md` erfüllt sind.
