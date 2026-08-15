@@ -23,9 +23,10 @@
 
       try {
         await import("../all.test.mjs");
+        await import("./browser-image.test.mjs");
         const report = await runRegisteredTests();
         const summary = {
-          ok: report.ok && report.tests === 146,
+          ok: report.ok && report.tests === 155,
           runtime: navigator.userAgent,
           tests: report.tests,
           passed: report.passed,

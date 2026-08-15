@@ -22,3 +22,5 @@ import "./vision/raster-image.test.mjs";
 import "./vision/matrix-renderer.test.mjs";
 import "./vision/binarization.test.mjs";
 import "./vision/ideal-grid-decoder.test.mjs";
+import "./decoder/decode-image.test.mjs";
+import "./decoder/negative-corpus.test.mjs";

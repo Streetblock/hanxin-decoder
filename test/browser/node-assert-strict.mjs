@@ -109,6 +109,31 @@ function throws(callback, expected = undefined, message = undefined) {
   fail(message ?? "Unsupported expected-error matcher");
 }
 
+async function rejects(callback, expected = undefined, message = undefined) {
+  let error;
+  try {
+    await callback();
+  } catch (caught) {
+    error = caught;
+  }
+  if (error === undefined) fail(message ?? "Expected the callback to reject");
+  if (expected === undefined) return error;
+
+  if (expected instanceof RegExp) {
+    if (!expected.test(String(error?.message ?? error))) {
+      fail(message ?? `Rejected error did not match ${expected}`);
+    }
+    return error;
+  }
+  if (typeof expected === "function") {
+    const isErrorConstructor = expected === Error || expected.prototype instanceof Error;
+    const matches = isErrorConstructor ? error instanceof expected : expected(error) === true;
+    if (!matches) fail(message ?? `Rejected error did not satisfy ${expected.name || "predicate"}`);
+    return error;
+  }
+  fail(message ?? "Unsupported expected-error matcher");
+}
+
 function match(actual, expression, message = undefined) {
   if (typeof actual !== "string" || !(expression instanceof RegExp) || !expression.test(actual)) {
     fail(message ?? `${valueDescription(actual)} did not match ${expression}`);
@@ -121,8 +146,9 @@ const assert = Object.freeze({
   equal,
   match,
   ok,
+  rejects,
   throws,
 });
 
-export { AssertionError, deepEqual, equal, match, ok, throws };
+export { AssertionError, deepEqual, equal, match, ok, rejects, throws };
 export default assert;
