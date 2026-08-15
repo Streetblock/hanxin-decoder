@@ -52,3 +52,28 @@ betroffenen ECI-Lauf wird kein Unicode-Text erzeugt.
 Binärsegmente hinweg dekodiert, ein anschließender ECI-Wechsel wird
 positionsgenau wirksam. Unbekannte und ungültige Zuweisungen bleiben
 verlustfrei und textlos. Derselbe Mehrsegmentfall läuft in Node und Chromium.
+
+## DEC-003: Überzählige Nullcodewörter in Anhang F, Beispiel 3
+
+**Status:** entschieden
+
+**Kontext:** Beispiel 3 ist als Version 17 mit Fehlerkorrekturstufe L2
+festgelegt. F.3.3 bezeichnet seinen Informationscodewortstrom dennoch als
+251 Codewörter und veröffentlicht nach den 195 Nutzdatenbytes insgesamt 56
+Nullcodewörter. 251 ist die Datenkapazität von Version 17/L1. Unmittelbar
+danach legt derselbe Abschnitt für L2 die drei Blöcke `(100,70,30)`,
+`(100,70,30)` und `(99,69,30)` fest. Diese besitzen zusammen nur 209
+Informationscodewörter und 90 Prüfcodewörter. F.3.4 sowie die veröffentlichte
+Endmatrix entsprechen dieser L2-Struktur; die letzten 42 Nullcodewörter aus
+F.3.3 gehen dort nicht ein.
+
+**Entscheidung:** Der Golden-Test bewahrt F.3.3 vollständig mit allen 251
+veröffentlichten Werten. Für den Übergang zu F.3.4 verwendet die Bibliothek
+gemäß Tabelle B.1 und der im Beispiel selbst genannten L2-Blockstruktur die
+ersten 209 Informationscodewörter. Die 42 überzähligen, ausschließlich
+nullwertigen Codewörter werden als dokumentierte Norminkonsistenz behandelt,
+nicht als Teil des L2-RS-Stroms.
+
+**Testfolge:** Der Test fordert 251 veröffentlichte F.3.3-Codewörter, exakt 42
+überzählige Nullcodewörter, die L2-Blöcke mit 209 Daten- und 90 Prüfcodewörtern
+sowie die bytegenaue Übereinstimmung von F.3.4, F.3.5, F.3.6 und der Endmatrix.

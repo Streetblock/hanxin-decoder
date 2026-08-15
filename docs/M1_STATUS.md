@@ -50,6 +50,11 @@ Stand: 2026-08-15
 - Für Anhang F, Beispiel 1, werden Informationsbits, Informationscodewörter,
   RS-Prüfwörter, Picket-Fence-Datenstrom, Funktionsinformation und finale
   Matrix exakt reproduziert.
+- Für Anhang F, Beispiele 2 und 3, werden die veröffentlichten Informations-,
+  RS-, Picket-Fence- und Funktionsinformationsströme sowie die finalen Matrizen
+  exakt reproduziert. Die 42 überzähligen Nullcodewörter in F.3.3 gegenüber
+  der unmittelbar folgenden L2-Blockstruktur sind als `DEC-003` dokumentiert
+  und in beiden veröffentlichten Zuständen testgesichert.
 - Korrektur von einem und zwei unbekannten Codewortfehlern im Normvektor.
 - Vollständiger RS-Kapazitätsnachweis für alle 241 unterschiedlichen
   Blocktypen aus Tabelle B.1: für jede Fehlerzahl von 1 bis `t` werden Rand-,
@@ -85,17 +90,15 @@ Stand: 2026-08-15
   Platzierung und Auslesen sind für jede Version bytegenau invers.
 - Strikt getrennte, temporäre Drittanbieter-Vergleichsfixtures für
   Interoperabilitätsprüfungen; die Norm bleibt Implementierungsquelle.
-- 110 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
+- 111 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
   erfolgreich.
 
 ## Als Nächstes
 
-1. Die veröffentlichten Zwischenströme der Anhang-F-Beispiele 2 und 3
-   zusätzlich zu ihren bereits bestandenen Endmatrizen erfassen.
-2. Den vollständigen Node-Testkorpus in eine browserneutrale Test-Harness
+1. Den vollständigen Node-Testkorpus in eine browserneutrale Test-Harness
    überführen, damit über den bestandenen Browser-Smoke-Test hinaus sämtliche
    M1-Prüfungen unverändert im Browser laufen.
-3. Die Referenzmaschine für den verbindlichen Laufzeitnachweis festschreiben.
+2. Die Referenzmaschine für den verbindlichen Laufzeitnachweis festschreiben.
 
 M1 ist erst abgeschlossen, wenn sämtliche Kriterien `AC-M1-*` aus
 `AKZEPTANZKRITERIEN.md` erfüllt sind.

@@ -4,13 +4,17 @@ import test from "node:test";
 import {
   applyDataMask,
   BitMatrix,
+  correctPicketFenceCodewords,
   createFunctionPattern,
+  decodeFunctionInformationFromMatrix,
   decodeMatrix,
   encodeFunctionInformation,
   placeFunctionInformation,
   placePicketFenceCodewords,
+  readPicketFenceCodewords,
   toPicketFenceOrder,
 } from "../../src/core/index.js";
+import { ANNEX_F_INTERMEDIATE } from "../fixtures/annex-f-intermediate.mjs";
 import { ANNEX_F_MATRIX_ROWS } from "../fixtures/annex-f-matrices.mjs";
 
 const EXPECTED = Object.freeze([
@@ -43,6 +47,10 @@ function matrixFromRows(rows) {
 
 function byteHex(bytes) {
   return Array.from(bytes, (value) => value.toString(16).padStart(2, "0")).join(" ");
+}
+
+function bitString(bytes) {
+  return Array.from(bytes, (value) => value.toString(2).padStart(8, "0")).join("");
 }
 
 test("decodes all three final Annex F matrices byte-exactly", () => {
@@ -100,4 +108,80 @@ test("reproduces every published intermediate stream of Annex F example 1", () =
   );
   const finalMatrix = placeFunctionInformation(masked, functionCodewords);
   assert.ok(finalMatrix.equals(matrixFromRows(ANNEX_F_MATRIX_ROWS[0])));
+});
+
+test("reproduces every published intermediate stream of Annex F examples 2 and 3", () => {
+  for (const expected of ANNEX_F_INTERMEDIATE) {
+    const finalMatrix = matrixFromRows(ANNEX_F_MATRIX_ROWS[expected.example - 1]);
+    const functionInformation = decodeFunctionInformationFromMatrix(finalMatrix);
+    assert.equal(functionInformation.version, expected.version);
+    assert.equal(functionInformation.errorCorrectionLevel, expected.errorCorrectionLevel);
+    assert.equal(functionInformation.mask, expected.mask);
+    assert.deepEqual(functionInformation.codewords, expected.functionCodewords);
+
+    const generatedFunctionCodewords = encodeFunctionInformation({
+      version: expected.version,
+      errorCorrectionLevel: expected.errorCorrectionLevel,
+      mask: expected.mask,
+    });
+    assert.deepEqual(generatedFunctionCodewords, expected.functionCodewords);
+
+    const pattern = createFunctionPattern(expected.version);
+    const unmasked = applyDataMask(
+      finalMatrix,
+      expected.mask,
+      (row, column) => (
+        pattern.functionModules.data[row * pattern.dimension + column] !== 0
+      ),
+    );
+    const placedCodewords = readPicketFenceCodewords(unmasked, expected.version);
+    assert.deepEqual(placedCodewords, expected.placedCodewords);
+    assert.deepEqual(toPicketFenceOrder(expected.finalCodewords), expected.placedCodewords);
+
+    const corrected = correctPicketFenceCodewords(
+      placedCodewords,
+      expected.version,
+      expected.errorCorrectionLevel,
+    );
+    assert.equal(corrected.correctedErrors, 0);
+    assert.deepEqual(corrected.blockSequentialCodewords, expected.finalCodewords);
+    const expectedRsInformation = expected.informationCodewords.subarray(
+      0,
+      corrected.dataCodewords.length,
+    );
+    assert.deepEqual(corrected.dataCodewords, expectedRsInformation);
+    const publishedExcessPadding = expected.informationCodewords.subarray(
+      corrected.dataCodewords.length,
+    );
+    assert.equal(
+      publishedExcessPadding.length,
+      expected.publishedExcessPaddingCodewords ?? 0,
+    );
+    assert.ok(publishedExcessPadding.every((value) => value === 0));
+
+    const paddedInformationBits = bitString(expected.informationCodewords);
+    const informationBits = paddedInformationBits.slice(0, expected.informationBitLength);
+    assert.equal(informationBits.length, expected.informationBitLength);
+    if (expected.informationBits !== undefined) {
+      assert.equal(informationBits, expected.informationBits);
+    }
+    assert.match(paddedInformationBits.slice(expected.informationBitLength), /^0*$/u);
+
+    const reconstructedUnmasked = placePicketFenceCodewords(
+      expected.placedCodewords,
+      expected.version,
+    );
+    const reconstructedMasked = applyDataMask(
+      reconstructedUnmasked,
+      expected.mask,
+      (row, column) => (
+        pattern.functionModules.data[row * pattern.dimension + column] !== 0
+      ),
+    );
+    const reconstructedFinal = placeFunctionInformation(
+      reconstructedMasked,
+      expected.functionCodewords,
+    );
+    assert.ok(reconstructedFinal.equals(finalMatrix));
+  }
 });
