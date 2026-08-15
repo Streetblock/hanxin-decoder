@@ -17,6 +17,11 @@ Stand: 2026-08-15
 - Übergreifender Payload-Dispatcher für beliebige normgültige Modusfolgen,
   ECI-Zustandsweitergabe, verlustfreie Rohbytes und Nullauffüllung am Ende des
   Informationsbitstroms.
+- Vollständige Matrix-zu-Payload-Kette aus redundanter Funktionsinformation,
+  Dimensions-/Versionsabgleich, Demaskierung, Codewortauslesung,
+  Picket-Fence-Rückordnung, blockweiser RS-Korrektur und Payload-Dispatch.
+  Der Ergebnisvertrag enthält Version, Dimension, Fehlerstufe, Maske,
+  Korrekturzahl und den Symbologiebezeichner aus Anhang K.
 - Vier Masken aus Tabelle 14 mit Ausschluss von Funktionsmodulen. Die
   öffentliche Matrix-API ist nullbasiert; vor Auswertung der Normformeln
   werden Zeile und Spalte in die positiven Normkoordinaten `i` und `j`
@@ -56,16 +61,15 @@ Stand: 2026-08-15
   Platzierung und Auslesen sind für jede Version bytegenau invers.
 - Strikt getrennte, temporäre Drittanbieter-Vergleichsfixtures für
   Interoperabilitätsprüfungen; die Norm bleibt Implementierungsquelle.
-- 92 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
+- 96 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
   erfolgreich.
 
 ## Als Nächstes
 
-1. Die vollständige Matrix-zu-Payload-Kette aus Funktionsinformation,
-   Demaskierung, Codewortauslesung, RS-Korrektur und Payload-Dispatch
-   zusammenführen.
-2. Die drei Beispiele aus Anhang F als vollständige Ende-zu-Ende-Golden-Vektoren
+1. Die drei Beispiele aus Anhang F als vollständige Ende-zu-Ende-Golden-Vektoren
    ergänzen.
+2. Die vollständige Version-/Stufen-/Masken-Abdeckungsmatrix sowie die
+   Laufzeit- und Determinismusnachweise automatisieren.
 
 M1 ist erst abgeschlossen, wenn sämtliche Kriterien `AC-M1-*` aus
 `AKZEPTANZKRITERIEN.md` erfüllt sind.

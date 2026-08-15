@@ -60,7 +60,9 @@ export {
   readTextSegment,
   readUnicodeSegment,
   readUriSegment,
+  symbologyIdentifierForPayload,
 } from "./payload-segments.js";
+export { decodeMatrix } from "./matrix-decoder.js";
 export {
   MAX_HAN_XIN_VERSION,
   MIN_HAN_XIN_VERSION,

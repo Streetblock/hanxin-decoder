@@ -717,6 +717,9 @@ export function readPayload(input) {
   }
 
   const dataSegments = segments.filter((segment) => segment.mode !== HanXinMode.ECI);
+  if (dataSegments.length === 0) {
+    throw new InvalidBitStreamError("payload contains no data segment");
+  }
   const bytes = concatBytes(dataSegments.map((segment) => segment.bytes));
   const hasLosslessText = dataSegments.every((segment) => segment.text !== undefined);
   return {
@@ -729,4 +732,23 @@ export function readPayload(input) {
     uri: segments.some((segment) => segment.mode === HanXinMode.URI),
     unicode: segments.some((segment) => segment.mode === HanXinMode.UNICODE),
   };
+}
+
+/** Returns the ISO/IEC 15424 Han Xin symbology identifier from Annex K. */
+export function symbologyIdentifierForPayload(payload) {
+  if (!payload || !Array.isArray(payload.segments)) {
+    throw new TypeError("payload must be a decoded Han Xin payload");
+  }
+  const modifiers = [
+    [payload.eciUsed, 1],
+    [payload.gs1, 2],
+    [payload.uri, 4],
+    [payload.unicode, 8],
+  ].filter(([enabled]) => enabled).map(([, modifier]) => modifier);
+  if (modifiers.length > 1) {
+    throw new InvalidBitStreamError(
+      "payload combines modes with incompatible symbology-identifier modifiers",
+    );
+  }
+  return `]h${modifiers[0] ?? 0}`;
 }
