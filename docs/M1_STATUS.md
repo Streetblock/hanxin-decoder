@@ -25,12 +25,14 @@ Stand: 2026-08-15
 - Platzierung und Auslesen der zwei 34-Modul-Kopien in den vier Eckbereichen,
   einschließlich Rückfall auf die intakte Kopie und Erkennung widersprüchlicher
   gültiger Kopien.
-- 29 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
+- Vollständige Tabelle A.1 mit den Ausrichtungsparametern `r`, `k` und `m` für
+  Version 1-84 sowie abgeleitete, geometrisch validierte Regionsbreiten.
+- 34 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
   erfolgreich.
 
 ## Als Nächstes
 
-1. Tabellen aus Anhang A und B in maschinenlesbare, prüfbare Konstanten
+1. RS-Blocktabelle aus Anhang B in maschinenlesbare, prüfbare Konstanten
    überführen.
 2. Vollständige Funktionsmodulkarte mit Such-, Trenn-, Ausrichtungs- und
    Hilfsausrichtungsmustern für Version 1-84 implementieren.

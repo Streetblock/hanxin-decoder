@@ -1,5 +1,10 @@
 export { BitMatrix } from "./bit-matrix.js";
 export { BitReader, BitWriter } from "./bit-stream.js";
+export {
+  alignmentParametersForVersion,
+  alignmentRegionSpansForVersion,
+  HAN_XIN_ALIGNMENT_PARAMETERS,
+} from "./alignment-parameters.js";
 export { BinaryExtensionField } from "./binary-extension-field.js";
 export {
   GaloisField16,

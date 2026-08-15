@@ -1,3 +1,4 @@
+import "./core/alignment-parameters.test.mjs";
 import "./core/bit-matrix.test.mjs";
 import "./core/bit-stream.test.mjs";
 import "./core/gf256.test.mjs";
