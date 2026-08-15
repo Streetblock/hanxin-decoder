@@ -1,3 +1,4 @@
+import "./core/annex-f.test.mjs";
 import "./core/alignment-parameters.test.mjs";
 import "./core/bit-matrix.test.mjs";
 import "./core/bit-stream.test.mjs";

@@ -31,6 +31,11 @@ Stand: 2026-08-15
 - Reed-Solomon-Kodierung und -Dekodierung mit Generatorbasis 1.
 - Normvektor aus Anhang F, Beispiel 1: `(25, 21, 4)` und Prüfwörter
   `EB B4 68 1D`.
+- Alle drei finalen Matrizen aus Anhang F werden ohne Bildanalyse bytegenau zu
+  den normativen Texten, Versionen, Fehlerstufen und Masken dekodiert.
+- Für Anhang F, Beispiel 1, werden Informationsbits, Informationscodewörter,
+  RS-Prüfwörter, Picket-Fence-Datenstrom, Funktionsinformation und finale
+  Matrix exakt reproduziert.
 - Korrektur von einem und zwei unbekannten Codewortfehlern im Normvektor.
 - Funktionsinformation nach Anhang G mit `GF(2^4)`, RS `(7, 3, 4)`,
   Normbeispiel, allen 1.344 Version-/Level-/Maskenkombinationen und Korrektur
@@ -61,13 +66,13 @@ Stand: 2026-08-15
   Platzierung und Auslesen sind für jede Version bytegenau invers.
 - Strikt getrennte, temporäre Drittanbieter-Vergleichsfixtures für
   Interoperabilitätsprüfungen; die Norm bleibt Implementierungsquelle.
-- 96 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
+- 98 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
   erfolgreich.
 
 ## Als Nächstes
 
-1. Die drei Beispiele aus Anhang F als vollständige Ende-zu-Ende-Golden-Vektoren
-   ergänzen.
+1. Die veröffentlichten Zwischenströme der Anhang-F-Beispiele 2 und 3
+   zusätzlich zu ihren bereits bestandenen Endmatrizen erfassen.
 2. Die vollständige Version-/Stufen-/Masken-Abdeckungsmatrix sowie die
    Laufzeit- und Determinismusnachweise automatisieren.
 
