@@ -2,6 +2,13 @@
 
 Stand: 2026-08-15
 
+## Ergebnis
+
+**M1 ist abgeschlossen und abgenommen.** Alle anwendbaren Kriterien
+`AC-M1-*` sind erfüllt; `AC-M1-032` ist mangels aktivierter Erasure-API
+bedingungsgemäß nicht anwendbar. Der vollständige Nachweis steht in
+`docs/M1_AKZEPTANZBERICHT.md`.
+
 ## Fertig und getestet
 
 - ESM-Projektgerüst ohne Laufzeitabhängigkeiten.
@@ -105,7 +112,8 @@ Stand: 2026-08-15
 
 ## Als Nächstes
 
-1. Den formalen M1-Akzeptanzbericht erzeugen und anschließend M2 beginnen.
+1. M2 mit der Rastereingabe und der Erkennung sauberer digitaler Symbole
+   beginnen.
 
-M1 ist erst abgeschlossen, wenn sämtliche Kriterien `AC-M1-*` aus
-`AKZEPTANZKRITERIEN.md` erfüllt sind.
+Die M1-Produktgrenze bleibt die bereits normalisierte Modulmatrix. Bildsuche,
+Binarisierung, Perspektivkorrektur und Rasterabtastung beginnen in M2.
