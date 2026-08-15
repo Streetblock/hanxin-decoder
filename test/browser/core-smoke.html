@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Han Xin core browser smoke test</title>
+  </head>
+  <body>
+    <main>
+      <h1>Han Xin core browser smoke test</h1>
+      <pre id="result">Running…</pre>
+    </main>
+    <script type="module">
+      import { BitMatrix, decodeMatrix } from "../../src/core/index.js";
+      import { ANNEX_F_MATRIX_ROWS } from "../fixtures/annex-f-matrices.mjs";
+
+      const expected = [
+        {
+          text: "1234567890",
+          version: 1,
+          errorLevel: "L1",
+          mask: 1,
+        },
+        {
+          text: "1234567890ABCDEFGabcdefg,Han Xin Code",
+          version: 10,
+          errorLevel: "L3",
+          mask: 2,
+        },
+        {
+          text: "Summer Palace Ticket for 6 June 2015 13:00;2015年6月6日夜01時00分PM頤和園のチケット;2015년6월6일13시오후여름궁전티켓.2015年6月6号下午13:00的颐和园门票;",
+          version: 17,
+          errorLevel: "L2",
+          mask: 2,
+        },
+      ];
+
+      try {
+        const results = ANNEX_F_MATRIX_ROWS.map((rows, index) => {
+          const matrix = BitMatrix.fromRows(rows.map((row) => [...row].map(Number)));
+          const result = decodeMatrix(matrix);
+          for (const key of ["text", "version", "errorLevel", "mask"]) {
+            if (result[key] !== expected[index][key]) {
+              throw new Error(`Annex F example ${index + 1}: ${key} mismatch`);
+            }
+          }
+          return {
+            example: index + 1,
+            version: result.version,
+            errorLevel: result.errorLevel,
+            mask: result.mask,
+            byteLength: result.bytes.length,
+          };
+        });
+        const report = { ok: true, runtime: navigator.userAgent, results };
+        document.body.dataset.status = "passed";
+        document.querySelector("#result").textContent = JSON.stringify(report, null, 2);
+      } catch (error) {
+        document.body.dataset.status = "failed";
+        document.querySelector("#result").textContent = JSON.stringify({
+          ok: false,
+          name: error.name,
+          message: error.message,
+          stack: error.stack,
+        }, null, 2);
+      }
+    </script>
+  </body>
+</html>
