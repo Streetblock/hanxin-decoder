@@ -34,13 +34,14 @@ Stand: 2026-08-15
   Fehlerstufe L1-L4 und Maske 0-3 mit synthetischen, normgültigen Matrizen.
 - Deterministischer Doppel-Lauf mit byteidentischem Gesamtergebnis.
 - Reproduzierbarer Matrix-zu-Payload-Benchmark für Version 84/L4/Maske 3.
-  Der aktuelle Windows-x64-Lauf unter Node.js 24.19.0 erreicht nach zehn
-  Aufwärmläufen über 50 Messläufe Median 9,78 ms und p95 11,13 ms. Der
-  20-ms-Grenzwert ist damit auf dieser Maschine erfüllt; die verbindliche
-  Referenzmaschine muss weiterhin festgeschrieben werden.
+  Die festgelegte Referenzmaschine mit Intel Core i9-13900H, 20 logischen
+  Prozessoren, Windows 10.0.26200 x64 und Node.js 24.14.0 erreicht nach zehn
+  Aufwärmläufen über 50 Messläufe Median 9,49 ms, p95 10,89 ms und maximal
+  12,00 ms. Der p95-Grenzwert von 20 ms ist erfüllt.
 - Vollständiger Browser-Test unter Chromium 151 mit denselben unveränderten
-  114 Kernprüfungen wie unter Node: 114 bestanden, null fehlgeschlagen,
-  Laufzeit 15,53 s im jüngsten Lauf. Eine Import-Map stellt ausschließlich
+  115 Kernprüfungen wie unter Node: 115 bestanden, null fehlgeschlagen,
+  Laufzeit 20,04 s im abschließenden Abnahmelauf. Eine Import-Map stellt
+  ausschließlich
   browserneutrale Adapter für
   `node:test` und `node:assert/strict` bereit; Produktionscode und Testdateien
   bleiben identisch. Der separate schnelle Smoke-Test der drei
@@ -99,13 +100,12 @@ Stand: 2026-08-15
   Platzierung und Auslesen sind für jede Version bytegenau invers.
 - Strikt getrennte, temporäre Drittanbieter-Vergleichsfixtures für
   Interoperabilitätsprüfungen; die Norm bleibt Implementierungsquelle.
-- 114 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
+- 115 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
   erfolgreich.
 
 ## Als Nächstes
 
-1. Die Referenzmaschine für den verbindlichen Laufzeitnachweis festschreiben
-   und den formalen M1-Akzeptanzbericht erzeugen.
+1. Den formalen M1-Akzeptanzbericht erzeugen und anschließend M2 beginnen.
 
 M1 ist erst abgeschlossen, wenn sämtliche Kriterien `AC-M1-*` aus
 `AKZEPTANZKRITERIEN.md` erfüllt sind.

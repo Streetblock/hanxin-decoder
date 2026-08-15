@@ -162,6 +162,22 @@ test("falls back to the second copy when the first exceeds RS capacity", () => {
   assert.equal(decoded.copyCorrections.secondary, 0);
 });
 
+test("corrects simultaneous damage in both function-information copies", () => {
+  const encoded = encodeFunctionInformation({ version: 17, errorCorrectionLevel: 1, mask: 2 });
+  const damaged = placeFunctionInformation(new BitMatrix(55, 55), encoded);
+  const { primary, secondary } = functionInformationCoordinates(55);
+  damaged.flip(primary[1].column, primary[1].row);
+  damaged.flip(secondary[22].column, secondary[22].row);
+
+  const decoded = decodeFunctionInformationFromMatrix(damaged);
+  assert.equal(decoded.version, 17);
+  assert.equal(decoded.errorCorrectionLevel, 1);
+  assert.equal(decoded.mask, 2);
+  assert.equal(decoded.source, "both");
+  assert.equal(decoded.copyCorrections.primary, 1);
+  assert.equal(decoded.copyCorrections.secondary, 1);
+});
+
 test("rejects contradictory valid function-information copies", () => {
   const dimension = 23;
   const first = placeFunctionInformation(
