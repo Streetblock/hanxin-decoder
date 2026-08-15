@@ -13,6 +13,7 @@
     "./vision": "./src/vision/index.js"
   },
   "scripts": {
+    "demo": "node test/browser/server.mjs",
     "test": "node --test test/all.test.mjs test/node/all-node.test.mjs",
     "test:browser:serve": "node test/browser/server.mjs",
     "test:matrix-performance": "node test/performance/matrix-to-payload.mjs",

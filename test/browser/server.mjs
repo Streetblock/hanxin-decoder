@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const port = Number.parseInt(process.env.PORT ?? "4173", 10);
 const contentTypes = {
+  ".css": "text/css; charset=utf-8",
   ".html": "text/html; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
   ".mjs": "text/javascript; charset=utf-8",
@@ -15,7 +16,8 @@ const contentTypes = {
 
 createServer(async (request, response) => {
   try {
-    const pathname = decodeURIComponent(new URL(request.url, "http://localhost").pathname);
+    const requestedPath = decodeURIComponent(new URL(request.url, "http://localhost").pathname);
+    const pathname = requestedPath === "/" ? "/index.html" : requestedPath;
     const file = resolve(root, `.${pathname}`);
     if (file !== root && !file.startsWith(`${root}${sep}`)) {
       response.writeHead(403).end("Forbidden");

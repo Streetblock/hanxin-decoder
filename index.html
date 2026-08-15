@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Han-Xin-Codes lokal im Browser aus Dateien oder mit der Kamera lesen."
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' blob: data:; media-src 'self' blob:; worker-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <title>Han Xin Scanner</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#scanner">Zum Scanner springen</a>
+
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="Han Xin Scanner – Startseite">
+        <span class="brand-mark" aria-hidden="true">
+          <i></i><i></i><i></i><i></i>
+        </span>
+        <span>
+          <strong>Han Xin</strong>
+          <small>Local scanner</small>
+        </span>
+      </a>
+
+      <div class="privacy-badge">
+        <span aria-hidden="true"></span>
+        Bleibt auf diesem Gerät
+      </div>
+    </header>
+
+    <main id="scanner" class="workspace">
+      <section class="intro" aria-labelledby="page-title">
+        <p class="kicker">Browserbasierter Decoder</p>
+        <h1 id="page-title">Zeigen. Öffnen. Auslesen.</h1>
+        <p class="intro-copy">
+          Lesen Sie Han-Xin-Codes direkt aus einem Bild oder mit der Live-Kamera.
+          Ohne Upload, Konto oder Cloud-Verarbeitung.
+        </p>
+      </section>
+
+      <div class="scanner-layout">
+        <section class="capture-card" aria-labelledby="capture-title">
+          <div class="card-heading">
+            <div>
+              <p class="section-label">01 · Quelle</p>
+              <h2 id="capture-title">Bild erfassen</h2>
+            </div>
+            <span id="sourceMeta" class="source-meta">Noch kein Bild</span>
+          </div>
+
+          <div
+            id="dropzone"
+            class="capture-stage"
+            tabindex="0"
+            role="button"
+            aria-label="Bild auswählen oder hier ablegen"
+            aria-describedby="stageHint"
+          >
+            <img id="imagePreview" alt="Ausgewähltes Bild" hidden />
+            <video id="cameraVideo" playsinline muted hidden></video>
+            <canvas id="framePreview" aria-label="Eingefrorenes Kamerabild" hidden></canvas>
+
+            <div class="finder-frame" aria-hidden="true">
+              <i></i><i></i><i></i><i></i>
+            </div>
+
+            <div id="emptyState" class="empty-state">
+              <div class="drop-symbol" aria-hidden="true"><span>+</span></div>
+              <h3>Bild hier ablegen</h3>
+              <p id="stageHint">PNG oder JPEG · alternativ Kamera verwenden</p>
+            </div>
+
+            <div id="scanOverlay" class="scan-overlay" hidden aria-hidden="true">
+              <span></span>
+            </div>
+          </div>
+
+          <input id="fileInput" type="file" accept="image/png,image/jpeg" hidden />
+
+          <div class="primary-actions" aria-label="Bildquelle auswählen">
+            <button id="fileButton" class="button button-primary" type="button">
+              <span class="button-icon" aria-hidden="true">↥</span>
+              Bild öffnen
+            </button>
+            <button id="cameraButton" class="button button-dark" type="button">
+              <span class="camera-dot" aria-hidden="true"></span>
+              <span id="cameraButtonLabel">Kamera starten</span>
+            </button>
+          </div>
+
+          <div class="secondary-actions">
+            <button id="pasteButton" class="text-button" type="button">Aus Zwischenablage</button>
+            <span aria-hidden="true">·</span>
+            <button id="clearButton" class="text-button" type="button" disabled>Zurücksetzen</button>
+          </div>
+
+          <p class="scope-note">
+            Aktueller Bildmodus: saubere, rechtwinklige Symbole. Perspektive und
+            schwierige Kameraaufnahmen folgen mit M3.
+          </p>
+        </section>
+
+        <section class="result-card" aria-labelledby="result-title">
+          <div class="card-heading">
+            <div>
+              <p class="section-label">02 · Ergebnis</p>
+              <h2 id="result-title">Dekodierung</h2>
+            </div>
+            <span id="statusBadge" class="status-badge" data-state="idle">Bereit</span>
+          </div>
+
+          <div id="statusMessage" class="status-message" role="status" aria-live="polite">
+            Öffnen Sie ein Bild oder starten Sie die Kamera.
+          </div>
+
+          <div id="resultEmpty" class="result-empty" aria-hidden="true">
+            <span class="result-index">HX</span>
+            <p>Ein gültiges Ergebnis erscheint nach vollständiger Prüfung hier.</p>
+          </div>
+
+          <div id="resultContent" class="result-content" hidden>
+            <div class="payload-block">
+              <div class="payload-heading">
+                <span>Inhalt</span>
+                <button id="copyButton" class="copy-button" type="button">Kopieren</button>
+              </div>
+              <pre id="decodedText" class="decoded-text"></pre>
+            </div>
+
+            <dl class="metadata-grid">
+              <div><dt>Version</dt><dd id="versionValue">–</dd></div>
+              <div><dt>Fehlerkorrektur</dt><dd id="levelValue">–</dd></div>
+              <div><dt>Maske</dt><dd id="maskValue">–</dd></div>
+              <div><dt>Ausrichtung</dt><dd id="rotationValue">–</dd></div>
+              <div><dt>Polarität</dt><dd id="polarityValue">–</dd></div>
+              <div><dt>Korrigiert</dt><dd id="correctedValue">–</dd></div>
+            </dl>
+
+            <details class="technical-details">
+              <summary>Technische Details</summary>
+              <div class="detail-row"><span>Symbologie</span><strong id="symbologyValue">–</strong></div>
+              <div class="detail-row"><span>Segmente</span><strong id="segmentsValue">–</strong></div>
+              <div>
+                <span class="detail-label">Rohbytes</span>
+                <pre id="bytesValue" class="raw-bytes">–</pre>
+              </div>
+            </details>
+          </div>
+
+          <div class="result-footer">
+            <span><i aria-hidden="true"></i> Lokale Verarbeitung</span>
+            <span id="workerState">Worker bereit</span>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <canvas id="captureCanvas" hidden></canvas>
+    <script type="module" src="./src/demo/app.js"></script>
+  </body>
+</html>

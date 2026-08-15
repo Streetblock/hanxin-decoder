@@ -16,6 +16,8 @@ Product scope, release gates, and milestone evidence are defined in:
 - `docs/M1_AKZEPTANZBERICHT.md`
 - `docs/M2_AKZEPTANZBERICHT.md`
 - `docs/M2_PLAN.md`
+- `docs/M4_PLAN.md`
+- `docs/M4_STATUS.md`
 - `docs/THIRD_PARTY_NOTICES.md`
 
 Run the current core tests with:
@@ -23,6 +25,16 @@ Run the current core tests with:
 ```sh
 npm test
 ```
+
+Start the local browser demo with:
+
+```sh
+npm run demo
+```
+
+Then open `http://127.0.0.1:4173/`. The demo accepts local PNG/JPEG files via
+file picker, drag-and-drop or clipboard and can scan a live camera stream. Image
+and payload data are processed locally and are not transmitted.
 
 The package is intentionally marked `UNLICENSED` and private until the project
 license and third-party provenance review are complete.
