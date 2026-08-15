@@ -1,4 +1,9 @@
 export { BitMatrix } from "./bit-matrix.js";
+export {
+  dataPlacementForVersion,
+  placePicketFenceCodewords,
+  readPicketFenceCodewords,
+} from "./data-placement.js";
 export { createCornerFunctionPattern } from "./corner-function-pattern.js";
 export { createFunctionPattern } from "./function-pattern.js";
 export { BitReader, BitWriter } from "./bit-stream.js";
