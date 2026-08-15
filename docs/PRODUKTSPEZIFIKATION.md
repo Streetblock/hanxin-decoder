@@ -24,9 +24,9 @@ sind. Heuristische Rohtexte gelten niemals als erfolgreicher Decode.
 3. `Referenzen/maxidecode-js` dient ausschließlich als Referenz für robuste
    Suchstrategien, Wiederholungslogik und Laufzeitintegration. Seine
    MaxiCode-Geometrie und sein Payload-Code werden nicht übernommen.
-4. proprietary third-party encoder darf in Entwicklungs- und Testwerkzeugen als optionales
-   Interoperabilitäts-Orakel eingesetzt werden. Es ist keine Laufzeitabhängigkeit
-   und keine normative Implementierungsquelle.
+4. Proprietäre Drittanbieter dürfen in lokalen Entwicklungs- und Testwerkzeugen
+   als optionale Interoperabilitäts-Orakel eingesetzt werden. Sie sind keine
+   Laufzeitabhängigkeit und keine normative Implementierungsquelle.
 
 Bei einem Widerspruch gilt die Norm. Abweichungen oder Interpretationsfragen
 werden mit Seiten-/Abschnittsbezug in einem Entscheidungsprotokoll dokumentiert.

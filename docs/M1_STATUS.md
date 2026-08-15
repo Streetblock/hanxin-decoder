@@ -39,14 +39,14 @@ Stand: 2026-08-15
 - Vollständige Funktionsmodulkarte für Version 1-84 mit alternierenden
   Ausrichtungsmustern und randbeschnittenen Hilfsausrichtungsmustern. Die
   Geometrie ist über alle Versionen gegen Symbolkapazitäten geprüft und mit
-  Zint sowie repräsentativen proprietary third-party-Matrizen abgeglichen. Die festgestellte
-  proprietary third-party-Abweichung bei einzelnen hellen Begleitmodulen ist als `DEC-001`
-  dokumentiert; dort gilt die Norm.
+  Zint sowie repräsentativen Matrizen eines proprietären Drittanbieter-Encoders
+  abgeglichen. Die festgestellte Abweichung bei einzelnen hellen
+  Begleitmodulen ist als `DEC-001` dokumentiert; dort gilt die Norm.
 - Normative zeilenweise Datenplatzierung für Version 1-84 mit MSB-erster
   Codewortbelegung, getrennt ausgewiesenen Restmodulen und inverser
   Matrixauslesung. Alle nicht reservierten Module werden ohne Duplikat erfasst;
   Platzierung und Auslesen sind für jede Version bytegenau invers.
-- `HanXinProbe.java` als strikt getrenntes proprietary third-party-Verhaltensorakel für
+- Strikt getrennte, temporäre Drittanbieter-Vergleichsfixtures für
   Interoperabilitätsprüfungen; die Norm bleibt Implementierungsquelle.
 - 63 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
   erfolgreich.

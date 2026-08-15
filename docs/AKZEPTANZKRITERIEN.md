@@ -16,7 +16,8 @@ Akzeptanzbericht festgehalten sind.
 - Zufallsbasierte Tests verwenden gespeicherte Seeds.
 - Leistungstests laufen nach Aufwärmphase mindestens 30-mal; bewertet werden
   Median und p95.
-- Tests dürfen proprietary third-party als Vergleichsinstanz verwenden, müssen aber mindestens
+- Tests dürfen proprietäre Drittanbieter als Vergleichsinstanz verwenden,
+  müssen aber mindestens
   einen unabhängigen normbasierten Erwartungswert besitzen.
 - Normative Golden Vectors werden unverändert versioniert und erhalten eine
   dokumentierte Herkunft.
