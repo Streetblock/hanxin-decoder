@@ -22,6 +22,14 @@ Stand: 2026-08-15
   Picket-Fence-Rückordnung, blockweiser RS-Korrektur und Payload-Dispatch.
   Der Ergebnisvertrag enthält Version, Dimension, Fehlerstufe, Maske,
   Korrekturzahl und den Symbologiebezeichner aus Anhang K.
+- Ende-zu-Ende-Abdeckung aller 1.344 Kombinationen aus Version 1-84,
+  Fehlerstufe L1-L4 und Maske 0-3 mit synthetischen, normgültigen Matrizen.
+- Deterministischer Doppel-Lauf mit byteidentischem Gesamtergebnis.
+- Reproduzierbarer Matrix-zu-Payload-Benchmark für Version 84/L4/Maske 3.
+  Der aktuelle Windows-x64-Lauf unter Node.js 24.19.0 erreicht nach zehn
+  Aufwärmläufen über 50 Messläufe Median 9,78 ms und p95 11,13 ms. Der
+  20-ms-Grenzwert ist damit auf dieser Maschine erfüllt; die verbindliche
+  Referenzmaschine muss weiterhin festgeschrieben werden.
 - Vier Masken aus Tabelle 14 mit Ausschluss von Funktionsmodulen. Die
   öffentliche Matrix-API ist nullbasiert; vor Auswertung der Normformeln
   werden Zeile und Spalte in die positiven Normkoordinaten `i` und `j`
@@ -66,15 +74,17 @@ Stand: 2026-08-15
   Platzierung und Auslesen sind für jede Version bytegenau invers.
 - Strikt getrennte, temporäre Drittanbieter-Vergleichsfixtures für
   Interoperabilitätsprüfungen; die Norm bleibt Implementierungsquelle.
-- 98 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
+- 100 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
   erfolgreich.
 
 ## Als Nächstes
 
 1. Die veröffentlichten Zwischenströme der Anhang-F-Beispiele 2 und 3
    zusätzlich zu ihren bereits bestandenen Endmatrizen erfassen.
-2. Die vollständige Version-/Stufen-/Masken-Abdeckungsmatrix sowie die
-   Laufzeit- und Determinismusnachweise automatisieren.
+2. Den M1-Kern unverändert in einem Browser-Testlauf ausführen und die
+   Referenzmaschine für den verbindlichen Laufzeitnachweis festschreiben.
+3. Die RS-Fehlerpositions- und Kapazitätstests über jeden Blocktyp bis `t`
+   ausweiten.
 
 M1 ist erst abgeschlossen, wenn sämtliche Kriterien `AC-M1-*` aus
 `AKZEPTANZKRITERIEN.md` erfüllt sind.

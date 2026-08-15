@@ -9,7 +9,8 @@
     "./core": "./src/core/index.js"
   },
   "scripts": {
-    "test": "node --test test/all.test.mjs"
+    "test": "node --test test/all.test.mjs",
+    "test:matrix-performance": "node test/performance/matrix-to-payload.mjs"
   },
   "engines": {
     "node": ">=20"

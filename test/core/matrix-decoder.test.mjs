@@ -2,51 +2,12 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
-  applyDataMask,
-  BitReader,
-  createFunctionPattern,
   decodeMatrix,
   encodeFunctionInformation,
-  expandRsBlocks,
-  joinRsBlocks,
   placeFunctionInformation,
-  placePicketFenceCodewords,
-  ReedSolomonCodec,
-  rsBlockStructureFor,
   symbologyIdentifierForPayload,
-  toPicketFenceOrder,
 } from "../../src/core/index.js";
-
-function bits(value, width) {
-  return value.toString(2).padStart(width, "0");
-}
-
-function buildMatrix(payloadBits, version, errorCorrectionLevel, mask, damage = undefined) {
-  const structure = rsBlockStructureFor(version, errorCorrectionLevel);
-  assert.ok(payloadBits.length <= structure.dataBits);
-  const information = BitReader.fromBitString(payloadBits.padEnd(structure.dataBits, "0")).bytes;
-  const codec = new ReedSolomonCodec();
-  let offset = 0;
-  const blocks = expandRsBlocks(version, errorCorrectionLevel).map((descriptor) => {
-    const data = information.slice(offset, offset + descriptor.dataCodewords);
-    offset += descriptor.dataCodewords;
-    return { codewords: codec.encode(data, descriptor.correctionCodewords) };
-  });
-  const sequential = joinRsBlocks(blocks, version, errorCorrectionLevel);
-  if (damage) damage(sequential);
-  const placed = toPicketFenceOrder(sequential);
-  const unmasked = placePicketFenceCodewords(placed, version);
-  const pattern = createFunctionPattern(version);
-  const masked = applyDataMask(
-    unmasked,
-    mask,
-    (row, column) => pattern.functionModules.data[row * pattern.dimension + column] !== 0,
-  );
-  return placeFunctionInformation(
-    masked,
-    encodeFunctionInformation({ version, errorCorrectionLevel, mask }),
-  );
-}
+import { bits, buildMatrix } from "../helpers/symbol-fixture.mjs";
 
 test("decodes normalized matrices through function info, mask, RS, and payload", () => {
   const payloadBits = `0001${bits(7, 10)}${bits(1021, 10)}`;
@@ -67,6 +28,21 @@ test("decodes normalized matrices through function info, mask, RS, and payload",
     assert.equal(result.mask, mask);
     assert.equal(result.correctedCodewords, 0);
     assert.equal(result.symbologyIdentifier, "]h0");
+  }
+});
+
+test("decodes every version, error level, and mask combination", () => {
+  const payloadBits = `0001${bits(7, 10)}${bits(1021, 10)}`;
+  for (let version = 1; version <= 84; version += 1) {
+    for (let level = 0; level <= 3; level += 1) {
+      for (let mask = 0; mask <= 3; mask += 1) {
+        const result = decodeMatrix(buildMatrix(payloadBits, version, level, mask));
+        assert.equal(result.text, "7", `version ${version}, level ${level}, mask ${mask}`);
+        assert.equal(result.version, version);
+        assert.equal(result.errorCorrectionLevel, level);
+        assert.equal(result.mask, mask);
+      }
+    }
   }
 });
 
@@ -108,4 +84,10 @@ test("derives every Annex K symbology identifier modifier", () => {
     () => symbologyIdentifierForPayload({ segments: [], eciUsed: true, unicode: true }),
     (error) => error.code === "PAYLOAD_INVALID",
   );
+});
+
+test("matrix decoding is deterministic", () => {
+  const payloadBits = `0010${bits(10, 6)}${bits(63, 6)}`;
+  const matrix = buildMatrix(payloadBits, 17, 1, 2);
+  assert.deepEqual(decodeMatrix(matrix), decodeMatrix(matrix));
 });
