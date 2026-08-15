@@ -36,18 +36,22 @@ Stand: 2026-08-15
   einmoduligen Trennzonen und beiden 34-Modul-Funktionsinformationskopien.
   Für Version 1-3 ist diese Vorlage bereits die vollständige
   Funktionsmodulkarte.
+- Vollständige Funktionsmodulkarte für Version 1-84 mit alternierenden
+  Ausrichtungsmustern und randbeschnittenen Hilfsausrichtungsmustern. Die
+  Geometrie ist über alle Versionen gegen Symbolkapazitäten geprüft und mit
+  Zint sowie repräsentativen proprietary third-party-Matrizen abgeglichen. Die festgestellte
+  proprietary third-party-Abweichung bei einzelnen hellen Begleitmodulen ist als `DEC-001`
+  dokumentiert; dort gilt die Norm.
 - `HanXinProbe.java` als strikt getrenntes proprietary third-party-Verhaltensorakel für
   Interoperabilitätsprüfungen; die Norm bleibt Implementierungsquelle.
-- 50 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
+- 58 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
   erfolgreich.
 
 ## Als Nächstes
 
-1. Vollständige Funktionsmodulkarte mit Such-, Trenn-, Ausrichtungs- und
-   Hilfsausrichtungsmustern für Version 1-84 implementieren.
-2. Datenplatzierung für Version 1-3 sowie 4-84
+1. Datenplatzierung für Version 1-3 sowie 4-84
    implementieren.
-3. Nutzdatenparser zunächst für Numerisch, Text und Binär, danach die
+2. Nutzdatenparser zunächst für Numerisch, Text und Binär, danach die
    chinesischen, GB18030-, ECI-, Unicode-, GS1- und URI-Modi.
 
 M1 ist erst abgeschlossen, wenn sämtliche Kriterien `AC-M1-*` aus

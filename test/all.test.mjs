@@ -4,6 +4,7 @@ import "./core/bit-stream.test.mjs";
 import "./core/corner-function-pattern.test.mjs";
 import "./core/gf256.test.mjs";
 import "./core/function-information.test.mjs";
+import "./core/function-pattern.test.mjs";
 import "./core/masks.test.mjs";
 import "./core/modes.test.mjs";
 import "./core/reed-solomon.test.mjs";

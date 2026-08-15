@@ -1,5 +1,6 @@
 export { BitMatrix } from "./bit-matrix.js";
 export { createCornerFunctionPattern } from "./corner-function-pattern.js";
+export { createFunctionPattern } from "./function-pattern.js";
 export { BitReader, BitWriter } from "./bit-stream.js";
 export {
   alignmentParametersForVersion,

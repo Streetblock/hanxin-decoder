@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   BitMatrix,
+  createFunctionPattern,
   HAN_XIN_MASKS,
   applyDataMask,
   isDataMaskModule,
@@ -27,6 +28,26 @@ test("evaluates the four Table 14 mask expressions using zero-based API coordina
         ((i % j) + (j % i) + (i % 3) + (j % 3)) % 2 === 0,
       );
     }
+  }
+});
+
+test("all masks preserve the complete version 84 function pattern", () => {
+  const pattern = createFunctionPattern(84);
+  const original = new BitMatrix(pattern.dimension).fill(true);
+
+  for (let mask = 0; mask <= 3; mask += 1) {
+    const masked = applyDataMask(original, mask, pattern.isFunctionModule);
+    for (let row = 0; row < pattern.dimension; row += 1) {
+      for (let column = 0; column < pattern.dimension; column += 1) {
+        if (pattern.isFunctionModule(row, column)) {
+          assert.equal(masked.get(column, row), true);
+        }
+      }
+    }
+    assert.equal(
+      applyDataMask(masked, mask, pattern.isFunctionModule).equals(original),
+      true,
+    );
   }
 });
 
