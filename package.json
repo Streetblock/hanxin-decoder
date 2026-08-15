@@ -6,7 +6,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.js",
-    "./core": "./src/core/index.js"
+    "./core": "./src/core/index.js",
+    "./vision": "./src/vision/index.js"
   },
   "scripts": {
     "test": "node --test test/all.test.mjs",

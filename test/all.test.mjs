@@ -18,3 +18,4 @@ import "./core/reed-solomon.test.mjs";
 import "./core/rs-block-table.test.mjs";
 import "./core/rs-blocks.test.mjs";
 import "./core/version.test.mjs";
+import "./vision/raster-image.test.mjs";
