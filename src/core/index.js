@@ -1,5 +1,11 @@
 export { BitMatrix } from "./bit-matrix.js";
 export { BitReader, BitWriter } from "./bit-stream.js";
+export { BinaryExtensionField } from "./binary-extension-field.js";
+export {
+  GaloisField16,
+  HAN_XIN_FUNCTION_INFO_PRIMITIVE_POLYNOMIAL,
+  HAN_XIN_GF16,
+} from "./gf16.js";
 export {
   GaloisField256,
   HAN_XIN_GF256,
@@ -23,7 +29,20 @@ export {
   versionForDimension,
 } from "./version.js";
 export {
+  bitsToFunctionInformation,
+  decodeFunctionInformationFromMatrix,
+  decodeFunctionInformation,
+  encodeFunctionInformation,
+  functionInformationCoordinates,
+  functionInformationToBits,
+  HAN_XIN_ERROR_CORRECTION_LEVELS,
+  isFunctionInformationModule,
+  placeFunctionInformation,
+  readFunctionInformationCopies,
+} from "./function-information.js";
+export {
   HanXinCoreError,
+  InvalidFunctionInformationError,
   InvalidBitStreamError,
   ReedSolomonError,
 } from "./errors.js";

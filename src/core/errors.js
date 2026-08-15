@@ -17,3 +17,9 @@ export class ReedSolomonError extends HanXinCoreError {
     super("RS_UNCORRECTABLE", message, options);
   }
 }
+
+export class InvalidFunctionInformationError extends HanXinCoreError {
+  constructor(message, options = undefined) {
+    super("FUNCTION_INFO_INVALID", message, options);
+  }
+}

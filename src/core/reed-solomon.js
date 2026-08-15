@@ -152,7 +152,7 @@ function findErrorLocations(field, errorLocator) {
   if (count === 1) return [errorLocator.coefficient(1)];
 
   const locations = [];
-  for (let value = 1; value < 256 && locations.length < count; value += 1) {
+  for (let value = 1; value < field.size && locations.length < count; value += 1) {
     if (errorLocator.evaluateAt(value) === 0) locations.push(field.inverse(value));
   }
   if (locations.length !== count) {
@@ -182,12 +182,17 @@ function findErrorMagnitudes(field, errorEvaluator, errorLocations, generatorBas
   });
 }
 
-function assertCodewords(codewords) {
+function assertCodewords(field, codewords) {
   if (!(codewords instanceof Uint8Array)) {
     throw new TypeError("codewords must be a Uint8Array");
   }
-  if (codewords.length === 0 || codewords.length > 255) {
-    throw new RangeError("a Reed-Solomon block must contain 1 to 255 codewords");
+  if (codewords.length === 0 || codewords.length > field.order) {
+    throw new RangeError(
+      `a Reed-Solomon block over GF(${field.size}) must contain 1 to ${field.order} codewords`,
+    );
+  }
+  for (const codeword of codewords) {
+    field.assertElement("codeword", codeword);
   }
 }
 
@@ -198,10 +203,10 @@ export class ReedSolomonCodec {
   }
 
   encode(informationCodewords, correctionCodewords) {
-    assertCodewords(informationCodewords);
+    assertCodewords(this.field, informationCodewords);
     if (!Number.isInteger(correctionCodewords)
       || correctionCodewords <= 0
-      || informationCodewords.length + correctionCodewords > 255) {
+      || informationCodewords.length + correctionCodewords > this.field.order) {
       throw new RangeError("invalid correction codeword count");
     }
 
@@ -227,7 +232,7 @@ export class ReedSolomonCodec {
   }
 
   decode(receivedCodewords, correctionCodewords) {
-    assertCodewords(receivedCodewords);
+    assertCodewords(this.field, receivedCodewords);
     if (!Number.isInteger(correctionCodewords)
       || correctionCodewords <= 0
       || correctionCodewords >= receivedCodewords.length) {

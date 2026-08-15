@@ -19,15 +19,22 @@ Stand: 2026-08-15
 - Normvektor aus Anhang F, Beispiel 1: `(25, 21, 4)` und Prüfwörter
   `EB B4 68 1D`.
 - Korrektur von einem und zwei unbekannten Codewortfehlern im Normvektor.
-- 18 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
+- Funktionsinformation nach Anhang G mit `GF(2^4)`, RS `(7, 3, 4)`,
+  Normbeispiel, allen 1.344 Version-/Level-/Maskenkombinationen und Korrektur
+  von bis zu zwei beschädigten GF(16)-Symbolen.
+- Platzierung und Auslesen der zwei 34-Modul-Kopien in den vier Eckbereichen,
+  einschließlich Rückfall auf die intakte Kopie und Erkennung widersprüchlicher
+  gültiger Kopien.
+- 29 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
   erfolgreich.
 
 ## Als Nächstes
 
 1. Tabellen aus Anhang A und B in maschinenlesbare, prüfbare Konstanten
    überführen.
-2. Funktionsinformation samt Redundanz und Fehlerkorrektur implementieren.
-3. Funktionsmodulkarte und Datenplatzierung für Version 1-3 sowie 4-84
+2. Vollständige Funktionsmodulkarte mit Such-, Trenn-, Ausrichtungs- und
+   Hilfsausrichtungsmustern für Version 1-84 implementieren.
+3. Datenplatzierung für Version 1-3 sowie 4-84
    implementieren.
 4. Deinterleaving und RS-Blockverarbeitung für alle Version-/Level-Kombinationen.
 5. Nutzdatenparser zunächst für Numerisch, Text und Binär, danach die
