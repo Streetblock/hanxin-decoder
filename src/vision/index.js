@@ -6,3 +6,11 @@ export {
   findForegroundBounds,
   HanXinVisionError,
 } from "./binarization.js";
+export {
+  decodeIdealRaster,
+  DEFAULT_MAX_GRID_CANDIDATES,
+  deriveIdealGridCandidates,
+  rotateBitMatrix,
+  sampleIdealGrid,
+  validateIdealFunctionPattern,
+} from "./ideal-grid-decoder.js";
