@@ -32,7 +32,13 @@ Stand: 2026-08-15
 - Normative Codewort-Umsortierung im 13er-Schritt, invertierbares
   Deinterleaving, Split/Join aller RS-Blöcke sowie blockweise
   Reed-Solomon-Korrektur.
-- 44 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
+- Normative Eckfunktionsvorlage mit vier orientierten 7x7-Suchmustern,
+  einmoduligen Trennzonen und beiden 34-Modul-Funktionsinformationskopien.
+  Für Version 1-3 ist diese Vorlage bereits die vollständige
+  Funktionsmodulkarte.
+- `HanXinProbe.java` als strikt getrenntes proprietary third-party-Verhaltensorakel für
+  Interoperabilitätsprüfungen; die Norm bleibt Implementierungsquelle.
+- 50 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
   erfolgreich.
 
 ## Als Nächstes

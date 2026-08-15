@@ -1,6 +1,7 @@
 import "./core/alignment-parameters.test.mjs";
 import "./core/bit-matrix.test.mjs";
 import "./core/bit-stream.test.mjs";
+import "./core/corner-function-pattern.test.mjs";
 import "./core/gf256.test.mjs";
 import "./core/function-information.test.mjs";
 import "./core/masks.test.mjs";
