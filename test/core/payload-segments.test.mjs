@@ -5,9 +5,18 @@ import {
   BitReader,
   InvalidBitStreamError,
   readBinarySegment,
+  readCommonChineseRegionOneSegment,
+  readCommonChineseRegionTwoSegment,
+  readEciSegment,
+  readGb18030FourByteSegment,
+  readGb18030TwoByteSegment,
+  readGs1Segment,
   readModeIndicator,
   readNumericSegment,
+  readPayload,
   readTextSegment,
+  readUnicodeSegment,
+  readUriSegment,
 } from "../../src/core/index.js";
 
 function bits(value, width) {
@@ -147,4 +156,264 @@ test("segment readers compose without requiring byte alignment", () => {
   assert.equal(readModeIndicator(reader).mode, "binary");
   assert.deepEqual(readBinarySegment(reader).bytes, Uint8Array.of(0xFF));
   assert.equal(reader.available, 0);
+});
+
+test("decodes common Chinese region-one examples and all subranges", () => {
+  const stream = [0x8DA, 0xF86, 0xFE7, 0xFFF].map((value) => bits(value, 12)).join("");
+  const segment = readCommonChineseRegionOneSegment(BitReader.fromBitString(stream));
+  assert.deepEqual(segment.bytes, Uint8Array.from([0xC8, 0xAB, 0xA3, 0xBB, 0xA8, 0xBE]));
+  assert.equal(segment.characterCount, 3);
+  assert.deepEqual(segment.values, [
+    { region: 1, value: 0x8DA },
+    { region: 1, value: 0xF86 },
+    { region: 1, value: 0xFE7 },
+  ]);
+});
+
+test("decodes common Chinese region-two and in-segment region switches", () => {
+  const stream = [0x9EC, 0xFFE, 0x8DA, 0xFFE, 0, 0xFFF]
+    .map((value) => bits(value, 12)).join("");
+  const segment = readCommonChineseRegionTwoSegment(BitReader.fromBitString(stream));
+  assert.deepEqual(segment.bytes, Uint8Array.from([
+    0xF3, 0xA3,
+    0xC8, 0xAB,
+    0xD8, 0xA1,
+  ]));
+  assert.deepEqual(segment.values.map(({ region }) => region), [2, 1, 2]);
+});
+
+test("rejects malformed common Chinese segments", () => {
+  for (const [reader, decode] of [
+    [BitReader.fromBitString(bits(0xFFF, 12)), readCommonChineseRegionOneSegment],
+    [BitReader.fromBitString(bits(4074, 12)), readCommonChineseRegionOneSegment],
+    [BitReader.fromBitString(bits(3008, 12)), readCommonChineseRegionTwoSegment],
+    [BitReader.fromBitString(bits(0, 11)), readCommonChineseRegionOneSegment],
+  ]) {
+    assert.throws(() => decode(reader), InvalidBitStreamError);
+  }
+});
+
+test("decodes GB 18030 two-byte examples and boundary trail bytes", () => {
+  const values = [0x14D9, 0x15F4, 0, 63, 23939];
+  const stream = [...values, 0x7FFF].map((value) => bits(value, 15)).join("");
+  const segment = readGb18030TwoByteSegment(BitReader.fromBitString(stream));
+  assert.deepEqual(segment.bytes, Uint8Array.from([
+    0x9D, 0x51,
+    0x9E, 0xAF,
+    0x81, 0x40,
+    0x81, 0x80,
+    0xFE, 0xFE,
+  ]));
+});
+
+test("rejects malformed GB 18030 two-byte segments", () => {
+  for (const stream of [
+    bits(0x7FFF, 15),
+    `${bits(23940, 15)}${bits(0x7FFF, 15)}`,
+    bits(0, 14),
+  ]) {
+    assert.throws(
+      () => readGb18030TwoByteSegment(BitReader.fromBitString(stream)),
+      InvalidBitStreamError,
+    );
+  }
+});
+
+test("decodes GB 18030 four-byte normative example and boundaries", () => {
+  const example = readGb18030FourByteSegment(BitReader.fromBitString(bits(0x3098, 21)));
+  assert.deepEqual(example.bytes, Uint8Array.of(0x81, 0x39, 0xEF, 0x30));
+
+  const first = readGb18030FourByteSegment(BitReader.fromBitString(bits(0, 21)));
+  assert.deepEqual(first.bytes, Uint8Array.of(0x81, 0x30, 0x81, 0x30));
+
+  const last = readGb18030FourByteSegment(BitReader.fromBitString(bits(1_587_599, 21)));
+  assert.deepEqual(last.bytes, Uint8Array.of(0xFE, 0x39, 0xFE, 0x39));
+});
+
+test("rejects truncated and reserved GB 18030 four-byte values", () => {
+  assert.throws(
+    () => readGb18030FourByteSegment(BitReader.fromBitString(bits(0, 20))),
+    InvalidBitStreamError,
+  );
+  assert.throws(
+    () => readGb18030FourByteSegment(BitReader.fromBitString(bits(1_587_600, 21))),
+    InvalidBitStreamError,
+  );
+});
+
+test("decodes all three ECI assignment-number forms", () => {
+  for (const [stream, assignmentNumber, bitLength] of [
+    ["0" + bits(3, 7), 3, 8],
+    ["10" + bits(899, 14), 899, 16],
+    ["110" + bits(999_999, 21), 999_999, 24],
+  ]) {
+    const reader = BitReader.fromBitString(stream);
+    const segment = readEciSegment(reader);
+    assert.equal(segment.assignmentNumber, assignmentNumber);
+    assert.equal(segment.bitLength, bitLength);
+    assert.equal(reader.available, 0);
+  }
+});
+
+test("rejects truncated and reserved ECI assignment numbers", () => {
+  for (const stream of [
+    "0101010",
+    "10" + bits(0, 13),
+    "110" + bits(0, 20),
+    "110" + bits(1_000_000, 21),
+  ]) {
+    assert.throws(() => readEciSegment(BitReader.fromBitString(stream)), InvalidBitStreamError);
+  }
+});
+
+test("decodes differential Unicode byte modes and transitions", () => {
+  const stream = [
+    bits(1, 4),
+    "0011",
+    bits(2, 4),
+    bits(0x41, 8),
+    "00", "01", "10",
+    bits(2, 4),
+    "0010",
+    bits(0, 4), bits(1, 4),
+    bits(0xC3, 8), bits(0xA9, 8),
+    "0", "1",
+    "1111",
+  ].join("");
+  const segment = readUnicodeSegment(BitReader.fromBitString(stream));
+  assert.equal(segment.text, "ABCéê");
+  assert.deepEqual(segment.bytes, new TextEncoder().encode("ABCéê"));
+  assert.deepEqual(segment.groups.map(({ byteMode, count }) => ({ byteMode, count })), [
+    { byteMode: 1, count: 3 },
+    { byteMode: 2, count: 2 },
+  ]);
+});
+
+test("decodes every Unicode byte-mode counter form", () => {
+  for (const [count, counter] of [
+    [1, "0001"],
+    [8, "10" + bits(8, 6)],
+    [64, "110" + bits(64, 9)],
+    [512, "1110" + bits(512, 12)],
+    [4096, "11110" + bits(4096, 15)],
+  ]) {
+    const stream = [
+      bits(1, 4), counter,
+      bits(0, 4), bits(0x41, 8),
+      "1111",
+    ].join("");
+    const segment = readUnicodeSegment(BitReader.fromBitString(stream));
+    assert.equal(segment.characterCount, count);
+    assert.equal(segment.bytes.length, count);
+    assert.ok(segment.bytes.every((value) => value === 0x41));
+  }
+});
+
+test("rejects malformed Unicode segments", () => {
+  const malformed = [
+    "1111",
+    bits(5, 4),
+    `${bits(1, 4)}0000`,
+    `${bits(1, 4)}0001${bits(9, 4)}${bits(0x41, 8)}1111`,
+    `${bits(1, 4)}0001${bits(0, 4)}${bits(0x80, 8)}1111`,
+    `${bits(2, 4)}0001${bits(0, 4)}${bits(0, 4)}${bits(0x41, 8)}${bits(0x41, 8)}1111`,
+  ];
+  for (const stream of malformed) {
+    assert.throws(
+      () => readUnicodeSegment(BitReader.fromBitString(stream)),
+      InvalidBitStreamError,
+    );
+  }
+});
+
+test("decodes the first normative GS1 example", () => {
+  const numericValues = [10, 345, 312, 0, 1, 117, 191, 125, 10, 1022];
+  const textValues = [10, 11, 12, 13, 1, 2, 3, 4, 63];
+  const stream = [
+    "0001", numericValues.map((value) => bits(value, 10)).join(""),
+    "0010", textValues.map((value) => bits(value, 6)).join(""),
+    bits(0xFF, 8),
+  ].join("");
+  const segment = readGs1Segment(BitReader.fromBitString(stream));
+  assert.equal(segment.text, "01034531200000111719112510ABCD1234");
+  assert.equal(segment.segments.length, 2);
+  assert.equal(segment.gs1, true);
+});
+
+test("decodes GS1 FNC1 through the numeric extension value", () => {
+  const stream = [
+    "0010", [10, 63].map((value) => bits(value, 6)).join(""),
+    "0001", [1000, 211, 0, 1021].map((value) => bits(value, 10)).join(""),
+    bits(0xFF, 8),
+  ].join("");
+  const segment = readGs1Segment(BitReader.fromBitString(stream));
+  assert.equal(segment.text, `A\u001D2110`);
+  assert.equal(segment.bytes[1], 0x1D);
+});
+
+test("rejects empty, truncated, and foreign-mode GS1 containers", () => {
+  for (const stream of [
+    bits(0xFF, 8),
+    "0001" + bits(1, 10),
+    "0011" + bits(1, 13) + bits(0x41, 8) + bits(0xFF, 8),
+  ]) {
+    assert.throws(() => readGs1Segment(BitReader.fromBitString(stream)), InvalidBitStreamError);
+  }
+});
+
+test("decodes the normative URI-A example", () => {
+  const values = [49, 56, 4, 23, 0, 12, 15, 11, 4, 57, 63];
+  const stream = `001${values.map((value) => bits(value, 6)).join("")}111`;
+  const segment = readUriSegment(BitReader.fromBitString(stream));
+  assert.equal(segment.text, "http://www.example.com");
+  assert.deepEqual(segment.bytes, new TextEncoder().encode(segment.text));
+});
+
+test("decodes URI-A, URI-B, URI-C, switches, and percent encoding", () => {
+  const stream = [
+    "001", bits(0, 6), bits(62, 6), bits(0, 6), bits(63, 6),
+    "011", bits(125, 7), bits(1, 6), bits(62, 6), bits(1, 6), bits(63, 6),
+    "011", bits(124, 7), bits(127, 7),
+    "100", bits(2, 6), bits(0xE8, 8), bits(0xAF, 8),
+    "111",
+  ].join("");
+  const segment = readUriSegment(BitReader.fromBitString(stream));
+  assert.equal(segment.text, "aAbBsearch%E8%AF");
+  assert.deepEqual(segment.groups.map(({ set }) => set), ["A", "C", "C", "percent"]);
+});
+
+test("rejects malformed URI containers", () => {
+  for (const stream of [
+    "111",
+    "000",
+    "001" + bits(0, 5),
+    "100" + bits(0, 6),
+    "100" + bits(2, 6) + bits(0xE8, 8),
+  ]) {
+    assert.throws(() => readUriSegment(BitReader.fromBitString(stream)), InvalidBitStreamError);
+  }
+});
+
+test("dispatches mixed payloads, propagates ECI, and consumes zero padding", () => {
+  const stream = [
+    "1000", "0" + bits(3, 7),
+    "0001", bits(7, 10), bits(1021, 10),
+    "0010", bits(10, 6), bits(63, 6),
+    "11100010", "001", bits(0, 6), bits(63, 6), "111",
+    "000000",
+  ].join("");
+  const payload = readPayload(BitReader.fromBitString(stream));
+  assert.equal(payload.text, "7Aa");
+  assert.equal(payload.segments.length, 4);
+  assert.equal(payload.segments[1].eciAssignment, 3);
+  assert.equal(payload.segments[3].eciAssignment, 3);
+  assert.equal(payload.eciUsed, true);
+  assert.equal(payload.uri, true);
+});
+
+test("payload dispatcher preserves binary bytes without inventing text", () => {
+  const stream = `0011${bits(2, 13)}${bits(0x00, 8)}${bits(0xFF, 8)}`;
+  const payload = readPayload(BitReader.fromBitString(stream));
+  assert.deepEqual(payload.bytes, Uint8Array.of(0x00, 0xFF));
+  assert.equal(payload.text, undefined);
 });

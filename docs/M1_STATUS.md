@@ -9,10 +9,14 @@ Stand: 2026-08-15
 - `BitReader` und `BitWriter` für nicht byteausgerichtete Datenströme.
 - Han-Xin-Versions-/Dimensionsabbildung für Version 1 bis 84.
 - Strikter Präfixparser für die elf Modusindikatoren aus Tabelle 1.
-- Normative Segmentleser für Numerisch, Text und Binär. Abgedeckt sind beide
-  numerischen Normbeispiele, alle Werte der Text1-/Text2-Tabellen,
-  Submoduswechsel, der 13-Bit-Binärzähler, nicht byteausgerichtete Modusfolgen
-  und kontrollierte Fehler bei ungültigen oder abgeschnittenen Segmenten.
+- Normative Segmentleser für alle elf Modi: Numerisch, Text, Binär, beide
+  Bereiche häufiger chinesischer Zeichen, GB18030 Zwei- und Vier-Byte, ECI,
+  Unicode, GS1 und URI. Abgedeckt sind Bereichs- und Submoduswechsel,
+  variable Zähler, Terminatoren, GS1-FNC1, URI-A/B/C und Prozentkodierung sowie
+  kontrollierte Fehler bei ungültigen oder abgeschnittenen Segmenten.
+- Übergreifender Payload-Dispatcher für beliebige normgültige Modusfolgen,
+  ECI-Zustandsweitergabe, verlustfreie Rohbytes und Nullauffüllung am Ende des
+  Informationsbitstroms.
 - Vier Masken aus Tabelle 14 mit Ausschluss von Funktionsmodulen. Die
   öffentliche Matrix-API ist nullbasiert; vor Auswertung der Normformeln
   werden Zeile und Spalte in die positiven Normkoordinaten `i` und `j`
@@ -52,13 +56,16 @@ Stand: 2026-08-15
   Platzierung und Auslesen sind für jede Version bytegenau invers.
 - Strikt getrennte, temporäre Drittanbieter-Vergleichsfixtures für
   Interoperabilitätsprüfungen; die Norm bleibt Implementierungsquelle.
-- 72 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
+- 92 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
   erfolgreich.
 
 ## Als Nächstes
 
-1. Nutzdatenparser um die chinesischen, GB18030-, ECI-, Unicode-, GS1- und
-   URI-Modi sowie den übergreifenden Segmentdispatch erweitern.
+1. Die vollständige Matrix-zu-Payload-Kette aus Funktionsinformation,
+   Demaskierung, Codewortauslesung, RS-Korrektur und Payload-Dispatch
+   zusammenführen.
+2. Die drei Beispiele aus Anhang F als vollständige Ende-zu-Ende-Golden-Vektoren
+   ergänzen.
 
 M1 ist erst abgeschlossen, wenn sämtliche Kriterien `AC-M1-*` aus
 `AKZEPTANZKRITERIEN.md` erfüllt sind.

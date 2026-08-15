@@ -49,8 +49,17 @@ export {
 } from "./modes.js";
 export {
   readBinarySegment,
+  readCommonChineseRegionOneSegment,
+  readCommonChineseRegionTwoSegment,
+  readEciSegment,
+  readGb18030FourByteSegment,
+  readGb18030TwoByteSegment,
+  readGs1Segment,
   readNumericSegment,
+  readPayload,
   readTextSegment,
+  readUnicodeSegment,
+  readUriSegment,
 } from "./payload-segments.js";
 export {
   MAX_HAN_XIN_VERSION,
