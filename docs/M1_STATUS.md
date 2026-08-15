@@ -27,19 +27,21 @@ Stand: 2026-08-15
   gültiger Kopien.
 - Vollständige Tabelle A.1 mit den Ausrichtungsparametern `r`, `k` und `m` für
   Version 1-84 sowie abgeleitete, geometrisch validierte Regionsbreiten.
-- 34 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
+- Vollständige Tabelle B.1 mit allen 336 RS-Blockstrukturen für Version 1-84
+  und L1-L4, einschließlich konsistenter Daten-, Prüf- und Gesamtwortzahlen.
+- Normative Codewort-Umsortierung im 13er-Schritt, invertierbares
+  Deinterleaving, Split/Join aller RS-Blöcke sowie blockweise
+  Reed-Solomon-Korrektur.
+- 44 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
   erfolgreich.
 
 ## Als Nächstes
 
-1. RS-Blocktabelle aus Anhang B in maschinenlesbare, prüfbare Konstanten
-   überführen.
-2. Vollständige Funktionsmodulkarte mit Such-, Trenn-, Ausrichtungs- und
+1. Vollständige Funktionsmodulkarte mit Such-, Trenn-, Ausrichtungs- und
    Hilfsausrichtungsmustern für Version 1-84 implementieren.
-3. Datenplatzierung für Version 1-3 sowie 4-84
+2. Datenplatzierung für Version 1-3 sowie 4-84
    implementieren.
-4. Deinterleaving und RS-Blockverarbeitung für alle Version-/Level-Kombinationen.
-5. Nutzdatenparser zunächst für Numerisch, Text und Binär, danach die
+3. Nutzdatenparser zunächst für Numerisch, Text und Binär, danach die
    chinesischen, GB18030-, ECI-, Unicode-, GS1- und URI-Modi.
 
 M1 ist erst abgeschlossen, wenn sämtliche Kriterien `AC-M1-*` aus

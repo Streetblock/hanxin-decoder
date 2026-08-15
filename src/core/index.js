@@ -18,6 +18,19 @@ export {
 } from "./gf256.js";
 export { ReedSolomonCodec } from "./reed-solomon.js";
 export {
+  expandRsBlocks,
+  HAN_XIN_RS_BLOCK_TABLE,
+  rsBlockStructureFor,
+} from "./rs-block-table.js";
+export {
+  correctPicketFenceCodewords,
+  correctRsBlocks,
+  fromPicketFenceOrder,
+  joinRsBlocks,
+  splitRsBlocks,
+  toPicketFenceOrder,
+} from "./rs-blocks.js";
+export {
   HAN_XIN_MASKS,
   applyDataMask,
   isDataMaskModule,

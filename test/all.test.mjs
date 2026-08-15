@@ -6,4 +6,6 @@ import "./core/function-information.test.mjs";
 import "./core/masks.test.mjs";
 import "./core/modes.test.mjs";
 import "./core/reed-solomon.test.mjs";
+import "./core/rs-block-table.test.mjs";
+import "./core/rs-blocks.test.mjs";
 import "./core/version.test.mjs";
