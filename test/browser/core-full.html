@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Han Xin full core browser tests</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "node:assert/strict": "./node-assert-strict.mjs",
+          "node:test": "./node-test.mjs"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <main>
+      <h1>Han Xin full core browser tests</h1>
+      <pre id="result">Running...</pre>
+    </main>
+    <script type="module">
+      import { runRegisteredTests } from "./node-test.mjs";
+
+      try {
+        await import("../all.test.mjs");
+        const report = await runRegisteredTests();
+        const summary = {
+          ok: report.ok && report.tests === 111,
+          runtime: navigator.userAgent,
+          tests: report.tests,
+          passed: report.passed,
+          failed: report.failed,
+          durationMs: Math.round(report.durationMs * 100) / 100,
+          failures: report.failures,
+        };
+        document.body.dataset.status = summary.ok ? "passed" : "failed";
+        document.querySelector("#result").textContent = JSON.stringify(summary, null, 2);
+      } catch (error) {
+        document.body.dataset.status = "failed";
+        document.querySelector("#result").textContent = JSON.stringify({
+          ok: false,
+          name: error?.name ?? "Error",
+          message: error?.message ?? String(error),
+          stack: error?.stack,
+        }, null, 2);
+      }
+    </script>
+  </body>
+</html>

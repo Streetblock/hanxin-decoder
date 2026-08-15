@@ -31,11 +31,12 @@ Stand: 2026-08-15
   Aufwärmläufen über 50 Messläufe Median 9,78 ms und p95 11,13 ms. Der
   20-ms-Grenzwert ist damit auf dieser Maschine erfüllt; die verbindliche
   Referenzmaschine muss weiterhin festgeschrieben werden.
-- Echter Browser-Smoke-Test unter Chromium 151 mit denselben drei
-  Anhang-F-Matrizen und demselben `core`: alle Bytes, Versionen, Fehlerstufen
-  und Masken stimmen mit dem Node-Lauf überein; Browserkonsole ohne Warnungen
-  oder Fehler. Testseite und MIME-korrekter lokaler Testserver sind
-  reproduzierbar im Repository enthalten.
+- Vollständiger Browser-Test unter Chromium 151 mit denselben unveränderten
+  111 Kernprüfungen wie unter Node: 111 bestanden, null fehlgeschlagen, Laufzeit
+  25,05 s. Eine Import-Map stellt ausschließlich browserneutrale Adapter für
+  `node:test` und `node:assert/strict` bereit; Produktionscode und Testdateien
+  bleiben identisch. Der separate schnelle Smoke-Test der drei
+  Anhang-F-Matrizen und des segmentübergreifenden ECI-Falls bleibt erhalten.
 - Vier Masken aus Tabelle 14 mit Ausschluss von Funktionsmodulen. Die
   öffentliche Matrix-API ist nullbasiert; vor Auswertung der Normformeln
   werden Zeile und Spalte in die positiven Normkoordinaten `i` und `j`
@@ -95,10 +96,10 @@ Stand: 2026-08-15
 
 ## Als Nächstes
 
-1. Den vollständigen Node-Testkorpus in eine browserneutrale Test-Harness
-   überführen, damit über den bestandenen Browser-Smoke-Test hinaus sämtliche
-   M1-Prüfungen unverändert im Browser laufen.
-2. Die Referenzmaschine für den verbindlichen Laufzeitnachweis festschreiben.
+1. Die noch nicht vollständig nachgewiesenen `MODES`-Fälle – insbesondere
+   systematische Paarfolgen und ausgewählte Kapazitätsgrenzen – ergänzen.
+2. Die Referenzmaschine für den verbindlichen Laufzeitnachweis festschreiben
+   und den formalen M1-Akzeptanzbericht erzeugen.
 
 M1 ist erst abgeschlossen, wenn sämtliche Kriterien `AC-M1-*` aus
 `AKZEPTANZKRITERIEN.md` erfüllt sind.
