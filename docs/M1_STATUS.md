@@ -18,6 +18,13 @@ Stand: 2026-08-15
   ECI-Zustandsweitergabe und -Zeichensatzinterpretation über Segmentgrenzen,
   verlustfreie Rohbytes bei unbekannten, nicht verfügbaren oder ungültigen
   ECI-Daten sowie Nullauffüllung am Ende des Informationsbitstroms.
+- Systematischer Modusfolgen-Nachweis für alle 121 geordneten
+  Nachbarschaften der elf Modi. ECI wird bei Bedarf mit seinem normativ
+  erforderlichen Folgedatensegment eingebettet; unmittelbare ECI-Ersetzung ist
+  separat abgedeckt.
+- Für jeden der elf Modi wird die größte ausgewählte Nutzlast geprüft, die in
+  Version 1/L1 passt; der jeweils unmittelbar größere Bitstrom wird als zu
+  groß abgewiesen.
 - Vollständige Matrix-zu-Payload-Kette aus redundanter Funktionsinformation,
   Dimensions-/Versionsabgleich, Demaskierung, Codewortauslesung,
   Picket-Fence-Rückordnung, blockweiser RS-Korrektur und Payload-Dispatch.
@@ -32,8 +39,9 @@ Stand: 2026-08-15
   20-ms-Grenzwert ist damit auf dieser Maschine erfüllt; die verbindliche
   Referenzmaschine muss weiterhin festgeschrieben werden.
 - Vollständiger Browser-Test unter Chromium 151 mit denselben unveränderten
-  111 Kernprüfungen wie unter Node: 111 bestanden, null fehlgeschlagen, Laufzeit
-  25,05 s. Eine Import-Map stellt ausschließlich browserneutrale Adapter für
+  114 Kernprüfungen wie unter Node: 114 bestanden, null fehlgeschlagen,
+  Laufzeit 15,53 s im jüngsten Lauf. Eine Import-Map stellt ausschließlich
+  browserneutrale Adapter für
   `node:test` und `node:assert/strict` bereit; Produktionscode und Testdateien
   bleiben identisch. Der separate schnelle Smoke-Test der drei
   Anhang-F-Matrizen und des segmentübergreifenden ECI-Falls bleibt erhalten.
@@ -91,14 +99,12 @@ Stand: 2026-08-15
   Platzierung und Auslesen sind für jede Version bytegenau invers.
 - Strikt getrennte, temporäre Drittanbieter-Vergleichsfixtures für
   Interoperabilitätsprüfungen; die Norm bleibt Implementierungsquelle.
-- 111 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
+- 114 fokussierte Kernprüfungen sowie Syntax- und öffentlicher ESM-Importtest
   erfolgreich.
 
 ## Als Nächstes
 
-1. Die noch nicht vollständig nachgewiesenen `MODES`-Fälle – insbesondere
-   systematische Paarfolgen und ausgewählte Kapazitätsgrenzen – ergänzen.
-2. Die Referenzmaschine für den verbindlichen Laufzeitnachweis festschreiben
+1. Die Referenzmaschine für den verbindlichen Laufzeitnachweis festschreiben
    und den formalen M1-Akzeptanzbericht erzeugen.
 
 M1 ist erst abgeschlossen, wenn sämtliche Kriterien `AC-M1-*` aus

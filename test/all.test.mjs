@@ -10,6 +10,7 @@ import "./core/function-information.test.mjs";
 import "./core/function-pattern.test.mjs";
 import "./core/masks.test.mjs";
 import "./core/matrix-decoder.test.mjs";
+import "./core/mode-combinations.test.mjs";
 import "./core/modes.test.mjs";
 import "./core/payload-segments.test.mjs";
 import "./core/reed-solomon-coverage.test.mjs";
