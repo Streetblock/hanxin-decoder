@@ -476,13 +476,6 @@ body.is-camera-active .camera-dot {
   cursor: default;
 }
 
-.scope-note {
-  margin: 8px 2px 0;
-  color: #737b78;
-  font-size: 0.72rem;
-  line-height: 1.5;
-}
-
 .status-badge {
   display: inline-flex;
   align-items: center;

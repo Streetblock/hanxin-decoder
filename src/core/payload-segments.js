@@ -105,19 +105,12 @@ function readUnicodeGroupCount(reader) {
   return value;
 }
 
-function decodeUtf8Character(bytes, expectedByteLength) {
-  let text;
+function decodeUtf8Bytes(bytes) {
   try {
-    text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+    return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
   } catch {
     throw new InvalidBitStreamError("Unicode segment contains invalid UTF-8");
   }
-  if (bytes.length !== expectedByteLength || Array.from(text).length !== 1) {
-    throw new InvalidBitStreamError(
-      `Unicode ${expectedByteLength}-byte group does not encode exactly one character`,
-    );
-  }
-  return text;
 }
 
 function concatBytes(arrays) {
@@ -518,7 +511,6 @@ export function readUnicodeSegment(reader) {
   assertReader(reader);
   const output = [];
   const groups = [];
-  let text = "";
 
   while (true) {
     if (reader.available < 4) {
@@ -553,9 +545,7 @@ export function readUnicodeSegment(reader) {
         }
         bytes[byteIndex] = value;
       }
-      const character = decodeUtf8Character(bytes, byteMode);
       output.push(...bytes);
-      text += character;
     }
     groups.push({ byteMode, count, differenceWidths, minima });
   }
@@ -564,9 +554,11 @@ export function readUnicodeSegment(reader) {
     throw new InvalidBitStreamError("Unicode terminator appears before any byte-mode group");
   }
 
+  const bytes = Uint8Array.from(output);
+  const text = decodeUtf8Bytes(bytes);
   return {
     mode: HanXinMode.UNICODE,
-    bytes: Uint8Array.from(output),
+    bytes,
     text,
     characterCount: Array.from(text).length,
     groups,

@@ -289,6 +289,28 @@ test("decodes differential Unicode byte modes and transitions", () => {
   ]);
 });
 
+test("decodes UTF-8 characters across Unicode byte-mode group boundaries", () => {
+  const stream = [
+    bits(1, 4),
+    "0001",
+    bits(0, 4),
+    bits(0xC3, 8),
+    bits(2, 4),
+    "0001",
+    bits(0, 4), bits(0, 4),
+    bits(0xA9, 8), bits(0x41, 8),
+    "1111",
+  ].join("");
+  const segment = readUnicodeSegment(BitReader.fromBitString(stream));
+  assert.equal(segment.text, "éA");
+  assert.equal(segment.characterCount, 2);
+  assert.deepEqual(segment.bytes, Uint8Array.of(0xC3, 0xA9, 0x41));
+  assert.deepEqual(segment.groups.map(({ byteMode, count }) => ({ byteMode, count })), [
+    { byteMode: 1, count: 1 },
+    { byteMode: 2, count: 1 },
+  ]);
+});
+
 test("decodes every Unicode byte-mode counter form", () => {
   for (const [count, counter] of [
     [1, "0001"],
@@ -316,7 +338,6 @@ test("rejects malformed Unicode segments", () => {
     `${bits(1, 4)}0000`,
     `${bits(1, 4)}0001${bits(9, 4)}${bits(0x41, 8)}1111`,
     `${bits(1, 4)}0001${bits(0, 4)}${bits(0x80, 8)}1111`,
-    `${bits(2, 4)}0001${bits(0, 4)}${bits(0, 4)}${bits(0x41, 8)}${bits(0x41, 8)}1111`,
   ];
   for (const stream of malformed) {
     assert.throws(
